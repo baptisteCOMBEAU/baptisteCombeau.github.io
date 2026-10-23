@@ -121,6 +121,13 @@ footer{padding-block:28px;border-top:1px solid var(--line);font-family:var(--f-m
 }
 .placeholder{border:1px dashed var(--line);border-radius:6px;padding-block:48px;padding-inline:20px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
 .placeholder p{margin:0;color:var(--muted);max-width:34em}
+.proj-list{display:flex;flex-wrap:wrap;justify-content:center;gap:24px}
+.proj-list > .proj-card{flex:0 1 420px;min-width:0}
+.proj-card{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:26px;background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--ink);text-decoration:none;transition:border-color .15s,transform .15s}
+.proj-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.proj-card p{margin:0;color:var(--muted);font-size:.95rem}
+.proj-more{font-family:var(--f-mono);font-size:.8rem;color:var(--accent);margin-top:4px}
+@media (prefers-reduced-motion:reduce){.proj-card{transition:none}.proj-card:hover{transform:none}}
 /* Alignement centré de toute la page */
 header.top{flex-direction:column;justify-content:center;text-align:center;gap:10px}
 header.top nav{justify-content:center}
@@ -146,7 +153,7 @@ footer{text-align:center}
   <header class="top">
     <span>baptiste.combeau — build 2026.10</span>
     <nav aria-label="Sections">
-      <a href="#projets">Projets</a><a href="#competences">Compétences</a><a href="#contact">Contact</a><a href="CV-Baptiste-Combeau.pdf" target="_blank" rel="noopener">CV</a>
+      <a href="#projets">Projets</a><a href="#competences">Compétences</a><a href="#contact">Contact</a><a href="CV-Baptiste-Combeau.pdf?v=2" target="_blank" rel="noopener">CV</a>
     </nav>
   </header>
 
@@ -154,7 +161,7 @@ footer{text-align:center}
     <div>
       <div class="label">Développeur moteur C++</div>
       <h1>Baptiste <span>Combeau</span></h1>
-      <p class="lead">Dans un jeu, j'aime m'arrêter pour regarder comment un personnage tombe. Physique, collisions et mouvement sont mon terrain.</p>
+      <p class="lead">Dans un jeu, j'aime m'arrêter pour regarder comment un personnage tombe. Physique, collisions et mouvement sont mon terrain. Je fais aussi de l'optimisation et du rendu.</p>
       <div class="meta">
         <span><b>Formation</b> Bachelor Dév. Jeu Vidéo, Gaming Campus</span>
       </div>
@@ -168,9 +175,43 @@ footer{text-align:center}
 
   <section id="projets">
     <div class="label">Projets</div>
-    <h2>Ce que je construis</h2>
-    <div class="placeholder">
-      <div class="label">PLACEHOLDER</div>
+    <h2>Mes créations</h2>
+    <div class="proj-list">
+      <a class="proj-card" href="projets/lebon-interpreter.html">
+        <div class="status">Langage · sept. – oct. 2026</div>
+        <h3>LebonInterpreter</h3>
+        <p>Un langage en créole réunionnais et son interpréteur, avec VM et JIT.</p>
+        <div class="tags"><span class="tag">C++</span><span class="tag">Parser</span><span class="tag">Bytecode</span><span class="tag">VM</span></div>
+        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="proj-card" href="projets/life-game-masm.html">
+        <div class="status">C++ · assembleur · sept. 2026</div>
+        <h3>Life Game MASM</h3>
+        <p>Le jeu de la vie de Conway, optimisé en assembleur et en SIMD.</p>
+        <div class="tags"><span class="tag">C++</span><span class="tag">MASM x64</span><span class="tag">SSE2</span><span class="tag">Bitboard</span></div>
+        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="proj-card" href="projets/laby.html">
+        <div class="status">Physique · mars – avril 2026</div>
+        <h3>Laby</h3>
+        <p>Un jeu de survie dans un labyrinthe, sur un moteur DirectX 12 maison dont j'ai écrit la physique.</p>
+        <div class="tags"><span class="tag">C++</span><span class="tag">DirectX 12</span><span class="tag">ECS</span><span class="tag">Physique</span></div>
+        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="proj-card" href="projets/tankitanguy.html">
+        <div class="status">Réseau · janv. 2026</div>
+        <h3>TankiTanguy</h3>
+        <p>Un jeu de tanks multijoueur en réseau, avec un serveur en UDP.</p>
+        <div class="tags"><span class="tag">C++</span><span class="tag">UDP</span><span class="tag">Multithreading</span><span class="tag">Client / serveur</span></div>
+        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="proj-card" href="projets/pathfinding.html">
+        <div class="status">IA · nov. 2025</div>
+        <h3>Pathfinding Sandbox</h3>
+        <p>Des agents qui trouvent leur chemin avec A*, en 2D et en 3D, sur un terrain modifiable.</p>
+        <div class="tags"><span class="tag">C++</span><span class="tag">A*</span><span class="tag">IA</span><span class="tag">SFML</span></div>
+        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
+      </a>
     </div>
   </section>
 
@@ -192,7 +233,7 @@ footer{text-align:center}
         <h2 style="margin-bottom:12px">Parlons moteur</h2>
         <p>Besoin de quelqu'un pour vérifier que vos murs remplissent bien leur rôle et que vos cubes ne partent pas en orbite ? N'hésitez pas à me contacter.</p>
       </div>
-      <a class="cv-btn" href="CV-Baptiste-Combeau.pdf" target="_blank" rel="noopener">Voir mon CV <span aria-hidden="true">↗</span></a>
+      <a class="cv-btn" href="CV-Baptiste-Combeau.pdf?v=2" target="_blank" rel="noopener">Voir mon CV <span aria-hidden="true">↗</span></a>
       <div class="links-group">
         <div class="links row2">
           <a href="https://github.com/Ic3Scout" target="_blank" rel="noopener">GitHub</a>

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Laby</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Page projet : même identité que le portfolio, une colonne centrée, le moteur physique au centre */
+:root{
+  --bg:#0F1220; --surface:#171B2C; --ink:#E7E9F2; --muted:#9097B0; --line:#2A3048;
+  --accent:#E8DD4C; --wire:#6FA2FF; --gold:#E8DD4C; --on-gold:#1A1405; --code:#0B0E19;
+  --f-display:"Unbounded","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.label{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+code{font-family:var(--f-mono)}
+
+header.top{display:flex;flex-direction:column;align-items:center;gap:10px;padding-block:20px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:.8rem;text-align:center}
+header.top a{color:var(--ink);text-decoration:none}
+header.top a:hover{color:var(--accent)}
+
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding-block:52px 44px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,5.5vw,3.4rem);line-height:1.05;margin:0;text-wrap:balance;color:var(--gold)}
+.lead{font-size:1.1rem;max-width:36em;margin:0;text-align:justify;text-align-last:center;hyphens:auto}
+.tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.tag{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--line);border-radius:3px;padding:2px 7px}
+.meta{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;font-family:var(--f-mono);font-size:.82rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+.meta a,.credit a{color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor}
+.meta a:hover,.credit a:hover{filter:brightness(1.15)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.85rem;font-weight:500;color:var(--on-gold);background:var(--gold);text-decoration:none;padding:10px 18px;border-radius:3px}
+.btn:hover{filter:brightness(1.1)}
+.btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.video{margin:18px 0 0;width:100%;max-width:860px;display:flex;flex-direction:column;gap:8px}
+.video video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;background:var(--code);border:1px solid var(--line);border-radius:6px}
+.video figcaption{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+
+section{padding-block:48px;border-top:1px solid var(--line)}
+section > .label, section > h2, section > .intro{text-align:center}
+h2{font-family:var(--f-display);font-weight:500;font-size:clamp(1.4rem,3vw,1.9rem);margin:6px 0 16px;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:500;font-size:1.05rem;margin:0;line-height:1.3;text-wrap:balance}
+.intro{max-width:40em;margin:0 auto 32px;color:var(--muted)}
+
+.pipeline{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin:0 auto 28px}
+.stage{font-family:var(--f-mono);font-size:.8rem;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:8px 12px}
+.arrow{color:var(--muted);font-family:var(--f-mono)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;min-width:0}
+.card p{margin:0;color:var(--muted);font-size:.95rem}
+.cards.center{display:flex;flex-wrap:wrap;justify-content:center}
+.cards.center > .card{flex:0 1 300px}
+.card .k{font-family:var(--f-mono);font-size:.72rem;color:var(--accent)}
+.card ul{margin:4px 0 0;padding:0;list-style:none;color:var(--muted);font-size:.9rem;display:grid;gap:4px}
+
+.code-pair{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;margin-bottom:36px}
+.code-pair > *{min-width:0}
+.code-pair .txt{text-align:center}
+.code-pair .txt p{margin:8px 0 0;color:var(--muted)}
+pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:6px;padding:16px 18px;overflow-x:auto;font-size:.8rem;line-height:1.55;text-align:left}
+pre .c{color:var(--muted)}
+pre .k{color:var(--accent)}
+pre .r{color:var(--wire)}
+
+.keys{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 26px}
+.keys div{display:flex;align-items:center;gap:8px;font-size:.95rem}
+kbd{font-family:var(--f-mono);font-size:.78rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:3px;padding:2px 8px;background:var(--surface);color:var(--ink)}
+
+.role{width:fit-content;max-width:40em;margin:0 auto;display:grid;gap:10px;padding:0 0 0 1.3em;list-style:disc;text-align:left}
+.role li::marker{color:var(--accent)}
+.credit{text-align:center;color:var(--muted);font-size:.9rem;margin:24px auto 0;max-width:40em}
+
+footer{padding-block:28px;border-top:1px solid var(--line);font-family:var(--f-mono);font-size:.75rem;color:var(--muted);text-align:center}
+
+/* Paragraphes justifiés, dernière ligne centrée */
+.intro,.card p,.impl p,.code-pair .txt p,.credit,.table-note{text-align:justify;text-align-last:center;hyphens:auto}
+@media (max-width:820px){.code-pair{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="../index.html">← Baptiste Combeau · portfolio</a>
+  </header>
+
+  <div class="hero">
+    <div class="label">Projet · mars – avril 2026</div>
+    <h1>Laby</h1>
+    <p class="lead">Un prototype de jeu de survie coopératif aux accents roguelike, inspiré du film <em>Le Labyrinthe</em> : il faut survivre dans un labyrinthe qui s'agrandit, en rassemblant des ressources pour tenir les nuits. Le jeu tourne sur un moteur maison en C++ et DirectX 12, organisé autour d'un ECS. J'y ai écrit le moteur physique.</p>
+    <div class="tags"><span class="tag">C++</span><span class="tag">DirectX 12</span><span class="tag">ECS</span><span class="tag">Physique</span><span class="tag">Collisions</span></div>
+    <div class="meta"><span><b>Équipe</b> trois personnes, avec <a href="https://www.linkedin.com/in/vivien-singier-57764232b" target="_blank" rel="noopener">Vivien Singier</a> et <a href="https://www.linkedin.com/in/auxence-villeret-7a764132b/" target="_blank" rel="noopener">Auxence Villeret</a></span></div>
+    <div class="btns">
+      <a class="btn" href="https://github.com/vivienSINGIER/LabyBL/releases" target="_blank" rel="noopener">Essayer la démo <span aria-hidden="true">↗</span></a>
+      <a class="btn btn-ghost" href="https://github.com/vivienSINGIER/LabyBL" target="_blank" rel="noopener">Voir le code sur GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+    <figure class="video">
+      <video controls preload="metadata" playsinline poster="media/laby-poster.jpg" aria-label="Vidéo de gameplay de Laby">
+        <source src="media/laby-demo.mp4" type="video/mp4">
+        <a href="media/laby-demo.mp4">Voir la vidéo de démonstration</a>
+      </video>
+      <figcaption>Démo de gameplay · 1 min 48</figcaption>
+    </figure>
+  </div>
+
+  <section>
+    <div class="label">Le jeu</div>
+    <h2>Survivre dans le labyrinthe</h2>
+    <div class="cards">
+      <article class="card"><div class="k">Labyrinthe</div><p>Généré par le jeu et agrandi au fil des niveaux. L'inventaire est conservé d'un niveau à l'autre.</p></article>
+      <article class="card"><div class="k">Gaz</div><p>Des murs de gaz se referment sur le labyrinthe et infligent des dégâts aux joueurs pris derrière.</p></article>
+      <article class="card"><div class="k">Objets</div><p>Inventaire à trois emplacements : bâtons lumineux, nourriture, soins. Les objets se lancent et suivent la physique.</p></article>
+      <article class="card"><div class="k">Ennemis</div><p>Un ennemi terminé et deux autres en cours. Côté joueur, une barre de vie et un réticule.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Moteur physique</div>
+    <h2>De la détection à la réponse</h2>
+    <p class="intro">La physique tourne sous forme de systèmes ECS, exécutés à chaque frame dans cet ordre. Chaque étape réduit le travail de la suivante.</p>
+    <div class="pipeline" aria-label="Étapes de la physique">
+      <span class="stage">Intégration</span><span class="arrow" aria-hidden="true">→</span>
+      <span class="stage">Broad phase</span><span class="arrow" aria-hidden="true">→</span>
+      <span class="stage">Narrow phase</span><span class="arrow" aria-hidden="true">→</span>
+      <span class="stage">Résolution</span><span class="arrow" aria-hidden="true">→</span>
+      <span class="stage">Événements</span>
+    </div>
+    <div class="cards center">
+      <article class="card"><div class="k">PhysicIntegrateSystem</div><h3>Intégration</h3><p>Forces, gravité, amortissement et résistance de l'air, puis vitesse angulaire via le tenseur d'inertie. Les corps presque immobiles s'endorment pour ne plus coûter de calcul.</p></article>
+      <article class="card"><div class="k">BroadPhaseSystem</div><h3>Broad phase</h3><p>Une grille de hachage spatiale range chaque collider dans les cellules que couvre sa boîte englobante. Seuls les objets qui partagent une cellule forment une paire candidate.</p></article>
+      <article class="card"><div class="k">NarrowPhaseSystem</div><h3>Narrow phase</h3><p>Tests exacts sphère–sphère, sphère–OBB et OBB–OBB par SAT sur 15 axes, avec construction des points de contact face–face et arête–arête.</p></article>
+      <article class="card"><div class="k">PhysicSystem</div><h3>Résolution</h3><p>Impulsions accumulées sur la normale et en friction, restitution, plusieurs itérations de vitesse, puis correction des pénétrations restantes.</p></article>
+      <article class="card"><div class="k">OnCollision · OnTrigger</div><h3>Événements</h3><p>Les collisions et les zones de déclenchement sont transmises aux scripts de gameplay sous forme de callbacks.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Dans le code</div>
+    <h2>Trois points clés</h2>
+    <p class="intro">Extraits du dépôt, raccourcis pour la lecture.</p>
+
+    <div class="code-pair">
+      <div class="txt">
+        <h3>Des paires sans doublon</h3>
+        <p>Deux objets peuvent se croiser dans plusieurs cellules de la grille. Chaque paire est donc rangée dans un ordre fixe (plus petit identifiant d'abord), triée, puis dédoublonnée avant le test de boîtes englobantes.</p>
+      </div>
+<pre><code><span class="k">for</span> (EntityId src : bucket.dynamic)
+    <span class="k">for</span> (EntityId tgt : bucket.all)
+    {
+        <span class="k">if</span> (src == tgt) <span class="k">continue</span>;
+        <span class="c">// (A,B) et (B,A) deviennent la même paire</span>
+        EntityId lo = (src &lt; tgt) ? src : tgt;
+        EntityId hi = (src &lt; tgt) ? tgt : src;
+        m_pairKeys.emplace_back(lo, hi);
+    }
+
+std::sort(m_pairKeys.begin(), m_pairKeys.end());
+m_pairKeys.erase(std::unique(m_pairKeys.begin(),
+                 m_pairKeys.end()), m_pairKeys.end());
+
+<span class="k">if</span> (shapeA.aabb.Overlaps(shapeB.aabb))
+    m_candidatePairs.push_back({ lo, hi });</code></pre>
+    </div>
+
+    <div class="code-pair">
+      <div class="txt">
+        <h3>Une impulsion accumulée</h3>
+        <p>L'impulsion d'un point de contact est calculée avec la masse effective, qui tient compte de la rotation des deux corps. Le total accumulé ne peut jamais devenir négatif : un contact pousse, il ne tire pas.</p>
+      </div>
+<pre><code><span class="k">const float</span> effectiveMass =
+    rigidA.massInverse + rigidB.massInverse +
+    ComputeAngularMassTerm(rA, normal, rigidA.inertiaTensorWorldInverse) +
+    ComputeAngularMassTerm(rB, normal, rigidB.inertiaTensorWorldInverse);
+
+<span class="k">float</span> deltaImpulse = -(1.0f + restitution) * vn / effectiveMass;
+
+<span class="c">// Le cumul reste positif ou nul</span>
+<span class="k">const float</span> oldAccumulated = cached.accumulatedNormalImpulse;
+cached.accumulatedNormalImpulse = Max(0.0f, oldAccumulated + deltaImpulse);
+<span class="k">const float</span> applied = cached.accumulatedNormalImpulse - oldAccumulated;</code></pre>
+    </div>
+
+    <div class="code-pair">
+      <div class="txt">
+        <h3>Mettre les corps en sommeil</h3>
+        <p>Un corps dont les vitesses restent sous un seuil pendant un certain temps s'endort et n'est plus simulé. Un choc avec un autre corps le réveille.</p>
+      </div>
+<pre><code><span class="k">float</span> linearSq  = LengthSq(motion.linearVelocity);
+<span class="k">float</span> angularSq = LengthSq(motion.angularVelocity);
+
+<span class="k">bool</span> lowMotion = linearSq &lt; kSleepLinearThreshold
+              &amp;&amp; angularSq &lt; kSleepAngularThreshold;
+
+<span class="k">if</span> (lowMotion)
+{
+    motion.sleepTimer += dt;
+    <span class="k">if</span> (motion.sleepTimer &gt;= kSleepTimeThreshold)
+        motion.Sleep();
+}
+<span class="k">else</span>
+    motion.sleepTimer = 0.0f;</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Moteur</div>
+    <h2>Un moteur fait à trois</h2>
+    <p class="intro">En plus de la physique, le moteur comprend un rendu DirectX 12 (lumières, textures, polices, interface), un ECS par archétypes avec un ordonnanceur de systèmes, une couche réseau et un gestionnaire de scènes.</p>
+    <div class="keys">
+      <div><kbd>Z</kbd> <kbd>Q</kbd> <kbd>S</kbd> <kbd>D</kbd> se déplacer</div>
+      <div><kbd>Souris</kbd> regarder</div>
+      <div><kbd>1</kbd> → <kbd>3</kbd> choisir un objet</div>
+      <div><kbd>Clic gauche</kbd> lancer</div>
+      <div><kbd>Espace</kbd> sauter</div>
+      <div><kbd>R</kbd> passer la journée</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Mon rôle</div>
+    <h2>Ce que j'ai fait</h2>
+    <ul class="role">
+      <li>Le moteur physique : intégration, broad phase, narrow phase et résolution</li>
+      <li>Les colliders, les corps rigides et leurs tenseurs d'inertie</li>
+      <li>Les événements de collision et de déclenchement pour les scripts</li>
+      <li>L'interface de vie et le réticule</li>
+    </ul>
+    <p class="credit">Projet académique réalisé en équipe de trois avec <a href="https://www.linkedin.com/in/vivien-singier-57764232b" target="_blank" rel="noopener">Vivien Singier</a> et <a href="https://www.linkedin.com/in/auxence-villeret-7a764132b/" target="_blank" rel="noopener">Auxence Villeret</a>.</p>
+  </section>
+
+  <footer><a href="../index.html">← Retour au portfolio</a> · © 2026 Baptiste Combeau</footer>
+</div>
+</body>
+</html>
