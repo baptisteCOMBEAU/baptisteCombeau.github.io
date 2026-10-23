@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pathfinding Sandbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Page projet : même identité que le portfolio, une colonne centrée, vidéos 2D et 3D en tête */
+:root{
+  --bg:#0F1220; --surface:#171B2C; --ink:#E7E9F2; --muted:#9097B0; --line:#2A3048;
+  --accent:#E8DD4C; --wire:#6FA2FF; --gold:#E8DD4C; --on-gold:#1A1405; --code:#0B0E19;
+  --f-display:"Unbounded","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.label{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+code{font-family:var(--f-mono)}
+
+header.top{display:flex;flex-direction:column;align-items:center;gap:10px;padding-block:20px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:.8rem;text-align:center}
+header.top a{color:var(--ink);text-decoration:none}
+header.top a:hover{color:var(--accent)}
+
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding-block:52px 44px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,5.5vw,3.4rem);line-height:1.05;margin:0;text-wrap:balance;color:var(--gold)}
+.lead{font-size:1.1rem;max-width:36em;margin:0;text-align:justify;text-align-last:center;hyphens:auto}
+.tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.tag{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--line);border-radius:3px;padding:2px 7px}
+.meta{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;font-family:var(--f-mono);font-size:.82rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+.meta a,.credit a{color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor}
+.meta a:hover,.credit a:hover{filter:brightness(1.15)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.85rem;font-weight:500;color:var(--on-gold);background:var(--gold);text-decoration:none;padding:10px 18px;border-radius:3px}
+.btn:hover{filter:brightness(1.1)}
+.btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.videos{margin:18px 0 0;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:20px}
+.video{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.video video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;background:var(--code);border:1px solid var(--line);border-radius:6px}
+.video figcaption{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+
+section{padding-block:48px;border-top:1px solid var(--line)}
+section > .label, section > h2, section > .intro{text-align:center}
+h2{font-family:var(--f-display);font-weight:500;font-size:clamp(1.4rem,3vw,1.9rem);margin:6px 0 16px;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:500;font-size:1.05rem;margin:0;line-height:1.3;text-wrap:balance}
+.intro{max-width:40em;margin:0 auto 32px;color:var(--muted)}
+
+.pipeline{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin:0 auto 28px}
+.stage{font-family:var(--f-mono);font-size:.8rem;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:8px 12px}
+.arrow{color:var(--muted);font-family:var(--f-mono)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;min-width:0}
+.card p{margin:0;color:var(--muted);font-size:.95rem}
+.cards.center{display:flex;flex-wrap:wrap;justify-content:center}
+.cards.center > .card{flex:0 1 300px}
+.card .k{font-family:var(--f-mono);font-size:.72rem;color:var(--accent)}
+.card ul{margin:4px 0 0;padding:0;list-style:none;color:var(--muted);font-size:.9rem;display:grid;gap:4px}
+
+.code-pair{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;margin-bottom:36px}
+.code-pair > *{min-width:0}
+.code-pair .txt{text-align:center}
+.code-pair .txt p{margin:8px 0 0;color:var(--muted)}
+pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:6px;padding:16px 18px;overflow-x:auto;font-size:.8rem;line-height:1.55;text-align:left}
+pre .c{color:var(--muted)}
+pre .k{color:var(--accent)}
+pre .r{color:var(--wire)}
+
+.keys{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 26px}
+.keys div{display:flex;align-items:center;gap:8px;font-size:.95rem}
+kbd{font-family:var(--f-mono);font-size:.78rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:3px;padding:2px 8px;background:var(--surface);color:var(--ink)}
+
+.role{width:fit-content;max-width:40em;margin:0 auto;display:grid;gap:10px;padding:0 0 0 1.3em;list-style:disc;text-align:left}
+.role li::marker{color:var(--accent)}
+.credit{text-align:center;color:var(--muted);font-size:.9rem;margin:24px auto 0;max-width:40em}
+
+footer{padding-block:28px;border-top:1px solid var(--line);font-family:var(--f-mono);font-size:.75rem;color:var(--muted);text-align:center}
+
+/* Paragraphes justifiés, dernière ligne centrée */
+.intro,.card p,.impl p,.code-pair .txt p,.credit,.table-note{text-align:justify;text-align-last:center;hyphens:auto}
+.keys-block{display:grid;gap:14px;margin-bottom:28px}
+.keys-block h3{text-align:center}
+@media (max-width:820px){.code-pair{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="../index.html">← Baptiste Combeau · portfolio</a>
+  </header>
+
+  <div class="hero">
+    <div class="label">Projet · novembre 2025</div>
+    <h1>Pathfinding Sandbox</h1>
+    <p class="lead">Deux bacs à sable, l'un en 2D et l'autre en 3D, pour expérimenter la recherche de chemin avec l'algorithme A*. On crée des agents, on leur donne des objectifs et des patrouilles, puis on modifie le terrain pendant qu'ils se déplacent pour les voir recalculer leur chemin.</p>
+    <div class="tags"><span class="tag">C++</span><span class="tag">A*</span><span class="tag">IA</span><span class="tag">SFML</span><span class="tag">DirectX 12</span></div>
+    <div class="meta"><span><b>Équipe</b> binôme avec <a href="https://www.linkedin.com/in/vivien-singier-57764232b" target="_blank" rel="noopener">Vivien Singier</a></span></div>
+    <div class="btns">
+      <a class="btn" href="https://github.com/vivienSINGIER/PathFinding/releases" target="_blank" rel="noopener">Essayer la démo <span aria-hidden="true">↗</span></a>
+      <a class="btn btn-ghost" href="https://github.com/vivienSINGIER/PathFinding" target="_blank" rel="noopener">Voir le code sur GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="videos">
+      <figure class="video">
+        <video controls preload="metadata" playsinline poster="media/pathfinding-2d.jpg" aria-label="Vidéo du bac à sable 2D">
+          <source src="media/pathfinding-2d.mp4" type="video/mp4">
+          <a href="media/pathfinding-2d.mp4">Voir la vidéo 2D</a>
+        </video>
+        <figcaption>Bac à sable 2D · 1 min 33</figcaption>
+      </figure>
+      <figure class="video">
+        <video controls preload="metadata" playsinline poster="media/pathfinding-3d.jpg" aria-label="Vidéo du bac à sable 3D">
+          <source src="media/pathfinding-3d.mp4" type="video/mp4">
+          <a href="media/pathfinding-3d.mp4">Voir la vidéo 3D</a>
+        </video>
+        <figcaption>Bac à sable 3D · 1 min 42</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <section>
+    <div class="label">Fonctionnalités</div>
+    <h2>Ce qu'on peut faire</h2>
+    <div class="cards center">
+      <article class="card"><div class="k">Agents</div><p>Créer, sélectionner et supprimer des agents, régler leur vitesse.</p></article>
+      <article class="card"><div class="k">Objectifs</div><p>Donner une destination à un agent, puis enchaîner des destinations secondaires.</p></article>
+      <article class="card"><div class="k">Patrouille</div><p>Un agent peut boucler sur ses objectifs en continu.</p></article>
+      <article class="card"><div class="k">Aperçu</div><p>Afficher le chemin prévu avant que l'agent ne parte.</p></article>
+      <article class="card"><div class="k">Éditeur de carte</div><p>Rendre une case franchissable ou non et, en 3D, changer sa hauteur. Les cartes se sauvegardent et se rechargent.</p></article>
+      <article class="card"><div class="k">Chemins dynamiques</div><p>Quand le terrain change ou qu'un autre agent bloque le passage, l'agent corrige son chemin ou fait un détour.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">L'algorithme</div>
+    <h2>A* sur une grille</h2>
+    <p class="intro">Chaque case de la grille est un nœud relié à ses voisines, diagonales comprises. A* explore en priorité les nœuds qui semblent les plus proches de l'arrivée, ce qui lui évite de parcourir toute la carte.</p>
+
+    <div class="code-pair">
+      <div class="txt">
+        <h3>Choisir le prochain nœud</h3>
+        <p>La file de priorité trie les nœuds selon le coût déjà parcouru plus la distance estimée jusqu'à l'arrivée. En cas d'égalité, elle départage avec le coût parcouru.</p>
+      </div>
+<pre><code><span class="k">bool</span> <span class="k">operator</span>()(Node&lt;T&gt; <span class="k">const</span>* a, Node&lt;T&gt; <span class="k">const</span>* b) <span class="k">const</span>
+{
+    <span class="c">// f = g (coût parcouru) + h (distance estimée)</span>
+    <span class="k">int</span> totalCostA = a-&gt;cost + a-&gt;targetDistance;
+    <span class="k">int</span> totalCostB = b-&gt;cost + b-&gt;targetDistance;
+
+    <span class="k">if</span> (totalCostA == totalCostB)
+        <span class="k">return</span> a-&gt;cost &lt; b-&gt;cost;
+
+    <span class="k">return</span> totalCostA &gt; totalCostB;
+}</code></pre>
+    </div>
+
+    <div class="code-pair">
+      <div class="txt">
+        <h3>La boucle de recherche</h3>
+        <p>On retire le meilleur nœud de la file et on met à jour le coût de ses voisins. Une case occupée par un autre agent est ignorée, ce qui permet de contourner les agents en temps réel. Le chemin se reconstruit ensuite en remontant les <code>pCameFrom</code>.</p>
+      </div>
+<pre><code><span class="k">while</span> (!queue.empty())
+{
+    Node&lt;Tile&gt;* curr = queue.top();
+    queue.pop();
+    <span class="k">if</span> (curr-&gt;isVisited) <span class="k">continue</span>;
+    <span class="k">if</span> (curr == endNode) <span class="k">return</span> endNode;
+    curr-&gt;isVisited = <span class="k">true</span>;
+
+    <span class="k">for</span> (Node&lt;Tile&gt;* neighbour : curr-&gt;vNeighbours)
+    {
+        <span class="k">if</span> (neighbour-&gt;isVisited) <span class="k">continue</span>;
+        <span class="c">// case prise par un autre agent : on passe</span>
+        <span class="k">if</span> (neighbour-&gt;data-&gt;pOccupyingAgent != <span class="k">nullptr</span>
+         &amp;&amp; neighbour-&gt;data-&gt;pOccupyingAgent != pAgent) <span class="k">continue</span>;
+
+        neighbour-&gt;targetDistance = neighbour-&gt;data-&gt;Distance(endNode-&gt;data);
+        <span class="k">int</span> newCost = curr-&gt;cost + curr-&gt;data-&gt;Distance(neighbour-&gt;data);
+        <span class="k">if</span> (newCost &lt; neighbour-&gt;cost)
+        {
+            neighbour-&gt;cost = newCost;
+            neighbour-&gt;pCameFrom = curr;
+        }
+        queue.push(neighbour);
+    }
+}</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Deux versions</div>
+    <h2>De la 2D à la 3D</h2>
+    <p class="intro">La version 2D est affichée avec SFML. La version 3D reprend la même logique sur un moteur 3D en DirectX 12, avec des cases de hauteurs différentes et une caméra qu'on peut faire tourner et zoomer.</p>
+    <div class="keys-block">
+      <h3>Commandes 2D</h3>
+      <div class="keys">
+        <div><kbd>A</kbd> + <kbd>Clic gauche</kbd> créer un agent</div>
+        <div><kbd>Clic droit</kbd> ajouter un objectif</div>
+        <div><kbd>B</kbd> bloquer une case</div>
+        <div><kbd>Tab</kbd> aperçu du chemin</div>
+        <div><kbd>P</kbd> patrouille</div>
+        <div><kbd>F1</kbd> <kbd>F2</kbd> changer de carte</div>
+      </div>
+    </div>
+    <div class="keys-block">
+      <h3>Commandes 3D</h3>
+      <div class="keys">
+        <div><kbd>Flèches</kbd> déplacer le curseur</div>
+        <div><kbd>RShift</kbd> <kbd>RCtrl</kbd> hauteur d'une case</div>
+        <div><kbd>Entrée</kbd> définir la destination</div>
+        <div><kbd>Pavé num.</kbd> caméra et zoom</div>
+        <div><kbd>Espace</kbd> recentrer la caméra</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Mon rôle</div>
+    <h2>Ce que j'ai fait</h2>
+    <ul class="role">
+      <li>La configuration et l'affichage de la grille</li>
+      <li>La création, la sélection et la suppression des agents</li>
+      <li>Les déplacements en diagonale et la détection des agents bloqués</li>
+      <li>Le portage en 3D, le recyclage des entités et la caméra (rotation et zoom)</li>
+      <li>Les cartes de démonstration</li>
+    </ul>
+    <p class="credit">Projet académique réalisé en binôme avec <a href="https://www.linkedin.com/in/vivien-singier-57764232b" target="_blank" rel="noopener">Vivien Singier</a>.</p>
+  </section>
+
+  <footer><a href="../index.html">← Retour au portfolio</a> · © 2026 Baptiste Combeau</footer>
+</div>
+</body>
+</html>
