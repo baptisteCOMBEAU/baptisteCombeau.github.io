@@ -19,9 +19,6 @@
 }
 
 *{box-sizing:border-box}
-body{margin:0}
-img{max-width:100%}
-[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .wrap{max-width:1040px;margin:0 auto}
@@ -121,13 +118,70 @@ footer{padding-block:28px;border-top:1px solid var(--line);font-family:var(--f-m
 }
 .placeholder{border:1px dashed var(--line);border-radius:6px;padding-block:48px;padding-inline:20px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
 .placeholder p{margin:0;color:var(--muted);max-width:34em}
-.proj-list{display:flex;flex-wrap:wrap;justify-content:center;gap:24px}
-.proj-list > .proj-card{flex:0 1 420px;min-width:0}
-.proj-card{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:26px;background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--ink);text-decoration:none;transition:border-color .15s,transform .15s}
-.proj-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.proj-card p{margin:0;color:var(--muted);font-size:.95rem}
-.proj-more{font-family:var(--f-mono);font-size:.8rem;color:var(--accent);margin-top:4px}
-@media (prefers-reduced-motion:reduce){.proj-card{transition:none}.proj-card:hover{transform:none}}
+/* Carrousel des projets : un projet à la fois en plein cadre, miniatures dessous */
+.carousel{--stage:#090B11;max-width:1000px;margin:0 auto;text-align:left}
+.stage{position:relative;display:grid;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--stage);touch-action:pan-y}
+.slide{grid-area:1/1;position:relative;visibility:hidden;background:var(--stage);min-width:0}
+.slide.is-active,.slide.is-leaving{visibility:visible}
+.slide.is-active{z-index:1}
+/* Transition déclenchée par l'atterrissage du cube : onde de choc depuis le point d'impact, secousse du cadre */
+.shock{position:absolute;top:var(--iy,100%);left:var(--ix,50%);width:0;height:0;transform:translate(-50%,-50%);border:3px solid var(--gold);border-radius:50%;box-shadow:0 0 24px rgba(232,221,76,.5),inset 0 0 18px rgba(232,221,76,.35);z-index:3;pointer-events:none;opacity:0}
+.shock.go{animation:ring .65s cubic-bezier(.3,.7,.2,1) both}
+@keyframes ring{from{width:0;height:0;opacity:1}70%{opacity:.8}to{width:320%;height:0;padding-bottom:320%;opacity:0}}
+.stage.shake{animation:shake .4s cubic-bezier(.3,.7,.3,1)}
+@keyframes shake{0%{transform:none}18%{transform:translateY(6px)}36%{transform:translateY(-4px)}54%{transform:translateY(2px)}72%{transform:translateY(-1px)}100%{transform:none}}
+.thumb.pulse{animation:tpulse .5s ease-out}
+@keyframes tpulse{0%{box-shadow:0 0 0 0 rgba(232,221,76,.6)}100%{box-shadow:0 0 0 12px rgba(232,221,76,0)}}
+.counter{display:inline-flex;align-items:center;gap:.6ch;line-height:1.2em}
+.num-wrap{display:block;overflow:hidden;height:1.2em;line-height:1.2em}
+.num-wrap span{line-height:1.2em}
+.num-wrap span{display:inline-block}
+.num-wrap span.roll-up{animation:rollUp .45s cubic-bezier(.2,.8,.2,1)}
+.num-wrap span.roll-down{animation:rollDown .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes rollUp{from{transform:translateY(100%)}to{transform:none}}
+@keyframes rollDown{from{transform:translateY(-100%)}to{transform:none}}
+.navbtn.prev:hover{transform:translateX(-2px)}.navbtn.next:hover{transform:translateX(2px)}
+.navbtn:active{transform:scale(.92)}
+.media{position:relative;aspect-ratio:16/9;max-width:100%;background:var(--stage)}
+.media video.fit{object-fit:contain;background:#0C0C0C}
+.media video,.media canvas,.media img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover}
+.media .hud{position:absolute;left:12px;top:10px;font-family:var(--f-mono);font-size:.7rem;line-height:1.5;color:var(--muted);pointer-events:none;text-shadow:0 1px 6px var(--stage)}
+.info{position:absolute;left:0;right:0;bottom:0;padding:70px 28px calc(var(--stairs-h) + 14px);background:linear-gradient(to top,var(--stage) 18%,rgba(9,11,17,.85) 55%,rgba(9,11,17,0));display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 24px;align-items:end}
+.info > div{min-width:0}
+.info .status{display:block;margin-bottom:6px}
+.info h3{font-family:var(--f-display);font-weight:700;font-size:clamp(1.4rem,3.2vw,2.2rem);line-height:1.05;margin:0 0 8px;color:var(--ink)}
+.info p{margin:0 0 10px;color:var(--ink);max-width:40em;opacity:.9}
+.info .tags{justify-content:flex-start}
+.info .who{font-family:var(--f-mono);font-size:.74rem;color:var(--muted);margin-top:8px}
+.see{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.85rem;font-weight:500;color:var(--on-gold);background:var(--gold);text-decoration:none;padding:10px 16px;border-radius:3px;white-space:nowrap}
+.see:hover{filter:brightness(1.1)}
+.navbtn{position:absolute;top:calc(50% - 60px);width:44px;height:44px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line);background:rgba(9,11,17,.75);color:var(--ink);font-size:1.3rem;cursor:pointer;z-index:4;transition:border-color .15s,color .15s,transform .15s}
+.navbtn:hover{border-color:var(--accent);color:var(--accent)}
+.navbtn.prev{left:12px}.navbtn.next{right:12px}
+.counter{position:absolute;right:14px;top:10px;z-index:4;font-family:var(--f-mono);font-size:.75rem;color:var(--ink);background:rgba(9,11,17,.75);border:1px solid var(--line);border-radius:3px;padding:2px 8px;z-index:2;font-variant-numeric:tabular-nums}
+.counter b{color:var(--accent);font-weight:500}
+.thumbs{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:12px}
+.thumb-ind{position:absolute;left:0;top:0;height:3px;background:var(--accent);border-radius:0 0 4px 4px;box-shadow:0 0 12px rgba(232,221,76,.5);pointer-events:none;transition:transform .6s cubic-bezier(.75,0,.2,1),width .6s cubic-bezier(.75,0,.2,1)}
+.thumb{position:relative;display:flex;flex-direction:column;gap:2px;text-align:left;padding:10px 12px 12px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink);cursor:pointer;font:inherit;min-width:0;overflow:hidden;transition:border-color .2s,transform .2s,background .2s}
+.thumb:hover{border-color:var(--muted);transform:translateY(-3px)}
+.thumb .t{transition:color .2s}
+.thumb[aria-selected="true"]{background:color-mix(in srgb,var(--surface) 80%,var(--accent) 6%)}
+.thumb .n{font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.thumb .t{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thumb .d{font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.thumb[aria-selected="true"]{border-color:var(--accent)}
+.thumb[aria-selected="true"] .n{color:var(--accent)}
+.stage{--stairs-h:10px}
+/* Transition : écran de chargement où un cube tombe d'une marche, puis la nouvelle preview apparaît */
+.loader{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;display:none}
+.loader.on{display:block}
+.car-hint{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);text-align:center;margin:12px 0 0}
+@media (max-width:760px){
+  .info{position:static;background:var(--stage);padding:16px 16px 18px;grid-template-columns:1fr;border-top:1px solid var(--line)}
+  .navbtn{top:calc((100vw - 34px) * 9 / 32 - 22px);width:38px;height:38px}
+  .thumbs{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(130px,1fr);overflow-x:auto;padding-bottom:4px}
+}
+@media (prefers-reduced-motion:reduce){.num-wrap span,.slide,.shock,.stage,.thumb{animation:none!important}.loader{display:none!important}.thumb-ind,.thumb,.navbtn{transition:none}.thumb:hover{transform:none}}
 /* Alignement centré de toute la page */
 header.top{flex-direction:column;justify-content:center;text-align:center;gap:10px}
 header.top nav{justify-content:center}
@@ -151,7 +205,7 @@ footer{text-align:center}
 
 <div class="wrap">
   <header class="top">
-    <span>baptiste.combeau — build 2026.10</span>
+    <span>baptiste.combeau — build 2026.11</span>
     <nav aria-label="Sections">
       <a href="#projets">Projets</a><a href="#competences">Compétences</a><a href="#contact">Contact</a><a href="CV-Baptiste-Combeau.pdf?v=2" target="_blank" rel="noopener">CV</a>
     </nav>
@@ -176,42 +230,84 @@ footer{text-align:center}
   <section id="projets">
     <div class="label">Projets</div>
     <h2>Mes créations</h2>
-    <div class="proj-list">
-      <a class="proj-card" href="projets/lebon-interpreter.html">
-        <div class="status">Langage · sept. – oct. 2026</div>
-        <h3>LebonInterpreter</h3>
-        <p>Un langage en créole réunionnais et son interpréteur, avec VM et JIT.</p>
-        <div class="tags"><span class="tag">C++</span><span class="tag">Parser</span><span class="tag">Bytecode</span><span class="tag">VM</span></div>
-        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
-      </a>
-      <a class="proj-card" href="projets/life-game-masm.html">
-        <div class="status">C++ · assembleur · sept. 2026</div>
-        <h3>Life Game MASM</h3>
-        <p>Le jeu de la vie de Conway, optimisé en assembleur et en SIMD.</p>
-        <div class="tags"><span class="tag">C++</span><span class="tag">MASM x64</span><span class="tag">SSE2</span><span class="tag">Bitboard</span></div>
-        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
-      </a>
-      <a class="proj-card" href="projets/laby.html">
-        <div class="status">Physique · mars – avril 2026</div>
-        <h3>Laby</h3>
-        <p>Un jeu de survie dans un labyrinthe, sur un moteur DirectX 12 maison dont j'ai écrit la physique.</p>
-        <div class="tags"><span class="tag">C++</span><span class="tag">DirectX 12</span><span class="tag">ECS</span><span class="tag">Physique</span></div>
-        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
-      </a>
-      <a class="proj-card" href="projets/tankitanguy.html">
-        <div class="status">Réseau · janv. 2026</div>
-        <h3>TankiTanguy</h3>
-        <p>Un jeu de tanks multijoueur en réseau, avec un serveur en UDP.</p>
-        <div class="tags"><span class="tag">C++</span><span class="tag">UDP</span><span class="tag">Multithreading</span><span class="tag">Client / serveur</span></div>
-        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
-      </a>
-      <a class="proj-card" href="projets/pathfinding.html">
-        <div class="status">IA · nov. 2025</div>
-        <h3>Pathfinding Sandbox</h3>
-        <p>Des agents qui trouvent leur chemin avec A*, en 2D et en 3D, sur un terrain modifiable.</p>
-        <div class="tags"><span class="tag">C++</span><span class="tag">A*</span><span class="tag">IA</span><span class="tag">SFML</span></div>
-        <span class="proj-more">Voir le projet <span aria-hidden="true">→</span></span>
-      </a>
+    <div class="carousel" id="carousel" role="region" aria-roledescription="carrousel" aria-label="Projets" tabindex="-1">
+      <div class="stage" id="stage">
+        <div class="shock" id="shock" aria-hidden="true"></div>
+        <button class="navbtn prev" type="button" id="carPrev" aria-label="Projet précédent">‹</button>
+        <button class="navbtn next" type="button" id="carNext" aria-label="Projet suivant">›</button>
+
+        <article class="slide" role="tabpanel" id="slide-0" aria-roledescription="diapositive" aria-label="1 sur 6 : Babarchive">
+          <div class="media"><img src="projets/media/babar-preview.jpg" alt="Aperçu de Babarchive : un fichier découpé en blocs, compressés par deflate puis rangés dans l'archive" loading="lazy" decoding="async"></div>
+          <div class="info"><div>
+            <span class="status">Outils C++, nov. 2026</span>
+            <h3>Babarchive</h3>
+            <p>Une bibliothèque d'archives en C++20, avec compression zlib en flux et son outil en ligne de commande.</p>
+            <div class="who">En binôme : compression, extraction et CLI</div>
+          </div><a class="see" href="projets/babarchive.html">Voir le projet →</a></div>
+        </article>
+
+        <article class="slide" role="tabpanel" id="slide-1" aria-roledescription="diapositive" aria-label="2 sur 6 : LebonInterpreter">
+          <div class="media"><img src="projets/media/lebon-preview.jpg" alt="Aperçu de LebonInterpreter : bytecode de la VM à registres et état des registres" loading="lazy" decoding="async"></div>
+          <div class="info"><div>
+            <span class="status">Langage, sept. à oct. 2026</span>
+            <h3>LebonInterpreter</h3>
+            <p>Un langage en créole réunionnais et son interpréteur, avec VM et JIT.</p>
+            <div class="who">Équipe de 3 : parser, AST, compilateur et VM</div>
+          </div><a class="see" href="projets/lebon-interpreter.html">Voir le projet →</a></div>
+        </article>
+
+        <article class="slide" role="tabpanel" id="slide-2" aria-roledescription="diapositive" aria-label="3 sur 6 : Life Game MASM">
+          <div class="media"><video class="fit" data-src="projets/media/life-demo.mp4" poster="projets/media/life-poster.jpg" muted loop playsinline preload="none" aria-label="Extrait de la démo de Life Game MASM dans la console Windows"></video></div>
+          <div class="info"><div>
+            <span class="status">C++ et assembleur, sept. 2026</span>
+            <h3>Life Game MASM</h3>
+            <p>Le jeu de la vie de Conway, optimisé en assembleur et en SIMD.</p>
+            <div class="who">Solo : six implémentations comparées</div>
+          </div><a class="see" href="projets/life-game-masm.html">Voir le projet →</a></div>
+        </article>
+
+        <article class="slide" role="tabpanel" id="slide-3" aria-roledescription="diapositive" aria-label="4 sur 6 : Laby">
+          <div class="media"><video data-src="projets/media/laby-demo.mp4" poster="projets/media/laby-poster.jpg" muted loop playsinline preload="none" aria-label="Extrait de gameplay de Laby"></video></div>
+          <div class="info"><div>
+            <span class="status">Physique, mars à avril 2026</span>
+            <h3>Laby</h3>
+            <p>Un jeu de survie dans un labyrinthe, sur un moteur DirectX 12 maison dont j'ai écrit la physique.</p>
+            <div class="who">Équipe de 3 : moteur physique</div>
+          </div><a class="see" href="projets/laby.html">Voir le projet →</a></div>
+        </article>
+
+        <article class="slide" role="tabpanel" id="slide-4" aria-roledescription="diapositive" aria-label="5 sur 6 : TankiTanguy">
+          <div class="media"><img src="projets/media/tanki-preview.jpg" alt="Aperçu de TankiTanguy : paquets échangés entre deux clients et le serveur" loading="lazy" decoding="async"></div>
+          <div class="info"><div>
+            <span class="status">Réseau, janv. 2026</span>
+            <h3>TankiTanguy</h3>
+            <p>Un jeu de tanks multijoueur en réseau, avec un serveur en UDP.</p>
+            <div class="who">En binôme : architecture réseau</div>
+          </div><a class="see" href="projets/tankitanguy.html">Voir le projet →</a></div>
+        </article>
+
+        <article class="slide" role="tabpanel" id="slide-5" aria-roledescription="diapositive" aria-label="6 sur 6 : Pathfinding Sandbox">
+          <div class="media"><video data-src="projets/media/pathfinding-2d.mp4" poster="projets/media/pathfinding-2d.jpg" muted loop playsinline preload="none" aria-label="Extrait du bac à sable 2D de Pathfinding"></video></div>
+          <div class="info"><div>
+            <span class="status">IA, nov. 2025</span>
+            <h3>Pathfinding Sandbox</h3>
+            <p>Des agents qui trouvent leur chemin avec A*, en 2D et en 3D, sur un terrain modifiable.</p>
+            <div class="who">En binôme : grille, agents et portage 3D</div>
+          </div><a class="see" href="projets/pathfinding.html">Voir le projet →</a></div>
+        </article>
+        <canvas class="loader" id="loader" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="thumbs" role="tablist" aria-label="Choisir un projet" id="thumbs">
+        <span class="thumb-ind" id="thumbInd" aria-hidden="true"></span>
+        <button class="thumb" type="button" role="tab" aria-controls="slide-0"><span class="t">Babarchive</span><span class="d">nov. 2026</span></button>
+        <button class="thumb" type="button" role="tab" aria-controls="slide-1"><span class="t">LebonInterpreter</span><span class="d">oct. 2026</span></button>
+        <button class="thumb" type="button" role="tab" aria-controls="slide-2"><span class="t">Life Game MASM</span><span class="d">sept. 2026</span></button>
+        <button class="thumb" type="button" role="tab" aria-controls="slide-3"><span class="t">Laby</span><span class="d">avril 2026</span></button>
+        <button class="thumb" type="button" role="tab" aria-controls="slide-4"><span class="t">TankiTanguy</span><span class="d">janv. 2026</span></button>
+        <button class="thumb" type="button" role="tab" aria-controls="slide-5"><span class="t">Pathfinding Sandbox</span><span class="d">nov. 2025</span></button>
+      </div>
+      <p class="car-hint">Flèches ← → au clavier, ou glisser sur téléphone</p>
     </div>
   </section>
 
@@ -222,7 +318,7 @@ footer{text-align:center}
       <div><div class="label">Langages</div><ul><li>C++</li><li>HLSL</li><li>MASM / SIMD</li><li>Python</li></ul></div>
       <div><div class="label">Rendu</div><ul><li>DirectX 12</li><li>Rendu logiciel sur CPU</li><li>Shaders</li></ul></div>
       <div><div class="label">Physique et systèmes</div><ul><li>Collisions SAT, OBB, sphères</li><li>Résolution par impulsions</li><li>ECS, multithreading</li></ul></div>
-      <div><div class="label">Outils</div><ul><li>Git</li><li>Visual Studio</li><li>Unreal Engine 5</li></ul></div>
+      <div><div class="label">Outils</div><ul><li>Git</li><li>CMake</li><li>Visual Studio</li><li>Unreal Engine 5</li></ul></div>
     </div>
   </section>
 
@@ -233,7 +329,7 @@ footer{text-align:center}
         <h2 style="margin-bottom:12px">Parlons moteur</h2>
         <p>Besoin de quelqu'un pour vérifier que vos murs remplissent bien leur rôle et que vos cubes ne partent pas en orbite ? N'hésitez pas à me contacter.</p>
       </div>
-      <a class="cv-btn" href="CV-Baptiste-Combeau.pdf?v=2" target="_blank" rel="noopener">Voir mon CV <span aria-hidden="true">↗</span></a>
+      <a class="cv-btn" href="CV-Baptiste-Combeau.pdf?v=2" target="_blank" rel="noopener">Voir mon CV</a>
       <div class="links-group">
         <div class="links row2">
           <a href="https://github.com/Ic3Scout" target="_blank" rel="noopener">GitHub</a>
@@ -385,5 +481,155 @@ document.querySelectorAll('.coord').forEach(b=>{
   else { (function loop(){ step(); draw(); requestAnimationFrame(loop); })(); }
 })();
 </script>
-</body>
-</html>
+<script>
+(function(){
+  const car=document.getElementById('carousel'); if(!car) return;
+  const slides=[...car.querySelectorAll('.slide')], thumbs=[...car.querySelectorAll('.thumb')], num=document.getElementById('carNum');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  let cur=-1, raf=0;
+
+  // ---------- Scènes canvas des projets sans vidéo ----------
+  function fit(c){const r={width:c.clientWidth,height:c.clientHeight},d=Math.min(devicePixelRatio||1,2);if(c.width!==Math.round(r.width*d)){c.width=r.width*d;c.height=r.height*d;}const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return [x,r.width,r.height];}
+  function grid(x,W,H,s,col){x.strokeStyle=col;x.lineWidth=1;x.beginPath();for(let i=.5;i<W;i+=s){x.moveTo(i,0);x.lineTo(i,H);}for(let j=.5;j<H;j+=s){x.moveTo(0,j);x.lineTo(W,j);}x.stroke();}
+  const scenes={};
+  let active=null;
+  function run(){if(!active)return;const{scene,canvas,hud}=active;const [x,W,H]=fit(canvas);if(!scene.ready){scene.init(W,H);scene.ready=true;}scene.step();scene.draw(x,W,H,hud);raf=requestAnimationFrame(run);}
+
+  // ---------- Navigation ----------
+  // ---------- Chargement : un cube tombe d'une marche (ou remonte d'un saut), le projet change à l'atterrissage ----------
+  const loader=(function(){
+    const c=document.getElementById('loader'); if(!c) return null;
+    const x=c.getContext('2d'); let raf3=0;
+    const eo=t=>1-Math.pow(1-t,3), eio=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    function play(dir,label,onSwap){
+      cancelAnimationFrame(raf3);
+      c.classList.add('on');const d=Math.min(devicePixelRatio||1,2),W=c.clientWidth,H=c.clientHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0);
+      const gold=css('--gold'),ink=css('--on-gold'),line=css('--line'),muted=css('--muted'),text=css('--ink');
+      // Deux marches centrées : le cube tombe de la première à la deuxième (ou remonte de la deuxième à la première)
+      const sw=Math.min(170,W*.22),sh=Math.min(42,H*.09),cs=Math.min(40,sw*.26),ox=W/2-sw,oy=H/2-sh*.6;
+      const top=i=>({x:ox+i*sw+sw/2,y:oy+i*sh});
+      const from=dir>0?0:1,to=dir>0?1:0;
+      const TIN=.38,TOUT=.42,T0=TIN*.75,DUR=dir>0?.95:.62,HOLD=.2;
+      let parts=[],puffs=[],trail=[],hit=-1,swapped=false,last=performance.now();const t0=last;
+      function cube(px,py,rot,sx,sy,alpha,glow){x.save();x.globalAlpha=alpha;x.translate(px,py);x.scale(sx,sy);x.translate(0,-cs/2);x.rotate(rot);
+        if(glow){x.shadowColor='rgba(232,221,76,.65)';x.shadowBlur=glow;}
+        x.fillStyle=gold;x.fillRect(-cs/2,-cs/2,cs,cs);x.shadowBlur=0;x.strokeStyle=ink;x.lineWidth=1.6;x.strokeRect(-cs/2+4,-cs/2+4,cs-8,cs-8);x.restore();}
+      function burst(px,py){
+        for(let k=0;k<14;k++){const ang=-Math.PI*(.05+.9*Math.random()),v=70+Math.random()*190;parts.push({x:px+(Math.random()-.5)*cs,y:py-1,vx:Math.cos(ang)*v,vy:Math.sin(ang)*v,life:1,fade:1.2+Math.random(),s:1.5+Math.random()*3,spark:k%4===0});}
+        for(let k=0;k<0;k++){puffs.push({x:px+(Math.random()-.5)*cs*1.4,y:py-4,vx:(Math.random()-.5)*60,r:6+Math.random()*8,life:1});}
+      }
+      function frame(now){
+        const dt=Math.min(.033,(now-last)/1000);last=now;
+        const t=(now-t0)/1000,end=T0+DUR+HOLD+TOUT;
+        const a=t<TIN?eio(t/TIN):t>end-TOUT?eio(Math.max(0,(end-t)/TOUT)):1;
+        // Secousse de la scène à l'impact
+        const since=hit>=0?t-hit:9, shake=since<.2?Math.exp(-since*18)*Math.sin(since*80)*3:0;
+        x.clearRect(0,0,W,H);x.globalAlpha=a;x.fillStyle='#090B11';x.fillRect(0,0,W,H);
+        x.globalAlpha=a;
+        x.save();x.translate(0,shake);
+        // Marches : celle qui reçoit le cube encaisse la chute, descend d'un bloc puis remonte à sa hauteur d'origine (ressort amorti)
+        const drop=hit>=0?32*Math.exp(-since*6)*Math.sin(since*13):0;
+        const dent=(xx,i)=>i===to?drop:0;
+        for(let i=0;i<2;i++){const sx=ox+i*sw,sy=oy+i*sh,lit=i===to&&hit>=0;
+          const surface=()=>{for(let xx=sx;xx<=sx+sw+.1;xx+=3)x.lineTo(xx,sy+dent(xx,i));};
+          x.fillStyle=i?'#141927':'#11151F';x.beginPath();x.moveTo(sx,sy);surface();x.lineTo(sx+sw,sy+(3-i)*sh+dent(0,i));x.lineTo(sx,sy+(3-i)*sh+dent(0,i));x.closePath();x.fill();
+          if(lit){const gl=Math.max(.25,1-since*1.4);const g=x.createLinearGradient(0,sy-40,0,sy);g.addColorStop(0,'rgba(232,221,76,0)');g.addColorStop(1,'rgba(232,221,76,'+(.4*gl)+')');x.fillStyle=g;x.beginPath();x.moveTo(sx,sy-40);x.lineTo(sx+sw,sy-40);for(let xx=sx+sw;xx>=sx-.1;xx-=3)x.lineTo(xx,sy+dent(xx,i));x.closePath();x.fill();}
+          x.strokeStyle=lit?gold:line;x.lineWidth=lit?2.5:1;x.beginPath();x.moveTo(sx,sy+.5);for(let xx=sx;xx<=sx+sw+.1;xx+=3)x.lineTo(xx,sy+.5+dent(xx,i));x.stroke();
+          x.strokeStyle=line;x.lineWidth=1;x.beginPath();x.moveTo(sx+sw+.5,sy+dent(0,i));x.lineTo(sx+sw+.5,sy+sh+dent(0,i));x.stroke();}
+        // Trajectoire du cube
+        const u=Math.min(1,Math.max(0,(t-T0)/DUR));let px,py,rot=0,sx=1,sy=1;const A=top(from),B=top(to);
+        if(dir>0){const edge=ox+sw,xe=edge-cs*.15,land=B.x;
+          if(u<.24){const k=eio(u/.24);px=A.x+(xe-A.x)*k;py=A.y;rot=k*.1;sx=1-.06*Math.sin(Math.PI*k);sy=1+.06*Math.sin(Math.PI*k);}
+          else if(u<.68){const k=(u-.24)/.44;px=xe+(land-xe)*k;py=A.y-(sh*.8+cs*.5)*Math.sin(Math.PI*k*.75)+(B.y-A.y)*k*k+(sh*.8+cs*.5)*Math.sin(Math.PI*.75)*k*k;rot=.1+(Math.PI/2-.1)*eo(k);sy=1+.12*k;sx=1-.08*k;}
+          else if(u<.8){const k=(u-.68)/.12,q=Math.sin(Math.PI*k);px=land;py=B.y;rot=Math.PI/2;sx=1+.26*q;sy=1-.3*q;if(hit<0){hit=t;burst(land,B.y);}}
+          else{const k=eo((u-.8)/.2);px=B.x;py=B.y;rot=Math.PI/2;const w=Math.sin(k*Math.PI*2)*(1-k)*.06;sx=1+w;sy=1-w;}
+        } else {
+          // Bond balistique : accroupissement, impulsion, trajectoire parabolique à gravité constante, atterrissage sec
+          if(u<.2){const k=Math.sin(Math.PI*(u/.2));px=A.x;py=A.y;sx=1+.16*k;sy=1-.2*k;}
+          else if(u<.82){const k=(u-.2)/.62,hj=sh+cs*.85;px=A.x+(B.x-A.x)*k;py=A.y+(B.y-A.y)*k-4*hj*k*(1-k);rot=-Math.PI/2*Math.min(1,k*1.15);
+            const st=Math.max(0,1-k*3)*.14;sx=1-st;sy=1+st;}
+          else{const k=(u-.82)/.18,q=Math.sin(Math.PI*Math.min(1,k*1.4))*Math.max(0,1-k);px=B.x;py=B.y;rot=-Math.PI/2;sx=1+.26*q;sy=1-.3*q;if(hit<0){hit=t;burst(B.x,B.y);}}}
+        if(hit>=0){py+=dent(px,to);}
+        if(hit>=0&&!swapped){swapped=true;onSwap();}
+        // Ombre portée qui se resserre quand le cube approche du sol
+        const ground=dir>0?(px>ox+sw?B.y:A.y):(px<ox+sw?B.y:A.y),hgt=Math.max(0,ground-py),sf=Math.max(.3,1-hgt/120);
+        x.globalAlpha=a*.5*sf;x.fillStyle='#000';x.beginPath();x.ellipse(px,ground-1,cs*.62*sf,4*sf,0,0,7);x.fill();x.globalAlpha=a;
+        // Nuages de poussière
+        puffs.forEach(q=>{q.x+=q.vx*dt;q.r+=40*dt;q.life-=dt*1.6;x.globalAlpha=a*Math.max(0,q.life)*.25;x.fillStyle=text;x.beginPath();x.arc(q.x,q.y-q.r*.4,q.r,0,7);x.fill();});puffs=puffs.filter(q=>q.life>0);
+        // Étincelles et éclats
+        parts.forEach(q=>{q.vy+=520*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;if(q.y>(q.x>ox+sw?B.y:A.y)&&q.vy>0&&!q.b){q.vy*=-.35;q.vx*=.6;q.b=1;}q.life-=dt*q.fade;});parts=parts.filter(q=>q.life>0);
+        parts.forEach(q=>{x.globalAlpha=a*Math.max(0,q.life);if(q.spark){x.strokeStyle='#FFF6B0';x.lineWidth=1.5;x.beginPath();x.moveTo(q.x,q.y);x.lineTo(q.x-q.vx*.03,q.y-q.vy*.03);x.stroke();}else{x.fillStyle=gold;x.fillRect(q.x-q.s/2,q.y-q.s/2,q.s,q.s);}});
+        x.globalAlpha=a;
+        // Choc façon "clic" : disque blanc bref au contact, traits radiaux courts et nets, rebond élastique du cube
+        let pop=1;
+        if(since<.32){const k=since/.32;pop=1+.28*Math.exp(-k*6)*Math.cos(k*Math.PI*3.2);
+          const cx0=px,cy0=py-cs*.5;
+          if(since<.11){const f=since/.11;x.globalAlpha=a*(1-f);x.fillStyle='#FFFFFF';x.beginPath();x.arc(cx0,cy0,cs*(.6+f*1.4),0,7);x.fill();}
+          const L=cs*(.9+eo(Math.min(1,k*1.8))*1.6),len=cs*.55*(1-k);x.globalAlpha=a*Math.max(0,1-k*1.3);x.strokeStyle='#FFFFFF';x.lineWidth=3;x.lineCap='round';x.beginPath();
+          for(let r=0;r<8;r++){const an=r*Math.PI/4+Math.PI/8;x.moveTo(cx0+Math.cos(an)*L,cy0+Math.sin(an)*L);x.lineTo(cx0+Math.cos(an)*(L+len),cy0+Math.sin(an)*(L+len));}
+          x.stroke();x.lineCap='butt';x.globalAlpha=a;}
+        // Cube
+        x.save();x.translate(px,py-cs*.5);x.scale(pop,pop);x.translate(-px,-(py-cs*.5));
+        cube(px,py,rot,sx,sy,a,0);
+        x.restore();
+        x.restore();
+        // Nom du projet qui arrive
+        const lt=Math.min(1,Math.max(0,(t-.1)/.35));x.globalAlpha=a*lt;x.font='500 13px JetBrains Mono, monospace';x.textAlign='center';
+        x.fillStyle=muted;x.fillText('Chargement',W/2,oy+3*sh+16+(1-lt)*8);x.fillStyle=text;x.font='600 16px IBM Plex Sans, sans-serif';x.fillText(label,W/2,oy+3*sh+38+(1-lt)*8);
+        x.globalAlpha=1;
+        if(t<end)raf3=requestAnimationFrame(frame);else{c.classList.remove('on');x.clearRect(0,0,W,H);if(!swapped)onSwap();}
+      }
+      raf3=requestAnimationFrame(frame);
+    }
+    return {play};
+  })();
+  const ind=document.getElementById('thumbInd'), tbar=document.getElementById('thumbs');
+  const DUR=280;
+  function restart(el,cls){el.classList.remove(...cls);void el.offsetWidth;}
+  function placeInd(){const t=thumbs[cur];if(!t)return;ind.style.width=t.offsetWidth+'px';ind.style.transform='translate('+t.offsetLeft+'px,'+(t.offsetTop+t.offsetHeight-3)+'px)';}
+  addEventListener('resize',placeInd);
+  let shown=-1;
+  const shockEl=document.getElementById('shock'), stageEl=document.getElementById('stage');
+  function show(i){
+    if(i===shown)return;
+    const old=slides[shown], s=slides[i];
+    slides.forEach(x=>{if(x!==s)x.classList.remove('is-active','is-leaving');});
+    cancelAnimationFrame(raf);raf=0;active=null;
+    if(old){const ov=old.querySelector('video');if(ov)ov.pause();}
+    s.classList.add('is-active');
+    const v=s.querySelector('video');
+    if(v){if(!v.src){v.src=v.dataset.src;}if(!reduce){v.currentTime=0;v.play().catch(()=>{});}}
+    const c=s.querySelector('.media canvas');
+    if(c){const sc=scenes[c.dataset.scene];active={scene:sc,canvas:c,hud:s.querySelector('[data-hud]')};
+      if(reduce){const [x,W,H]=fit(c);if(!sc.ready){sc.init(W,H);sc.ready=true;}for(let k=0;k<90;k++)sc.step();sc.draw(x,W,H,active.hud);active=null;}else raf=requestAnimationFrame(run);}
+    shown=i;
+  }
+  function go(i,dir){
+    i=(i+slides.length)%slides.length; if(i===cur)return;
+    dir=dir||1; const first=cur<0, animate=!first&&!reduce&&!!loader;
+    cur=i;
+    thumbs.forEach((t,k)=>{t.setAttribute('aria-selected',k===i);t.tabIndex=k===i?0:-1;});
+    placeInd();
+    if(!first&&tbar.scrollWidth>tbar.clientWidth)tbar.scrollTo({left:thumbs[i].offsetLeft-(tbar.clientWidth-thumbs[i].offsetWidth)/2,behavior:reduce?'auto':'smooth'});
+    if(animate){const name=slides[i].querySelector('h3');loader.play(dir,name?name.textContent:'',()=>show(i));}
+    else show(i);
+  }
+  document.getElementById('carPrev').addEventListener('click',()=>go(cur-1,-1));
+  document.getElementById('carNext').addEventListener('click',()=>go(cur+1,1));
+  thumbs.forEach((t,k)=>t.addEventListener('click',()=>go(k,k<cur?-1:1)));
+  car.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'){go(cur+1,1);if(e.target.classList.contains('thumb'))thumbs[cur].focus();e.preventDefault();}
+    if(e.key==='ArrowLeft'){go(cur-1,-1);if(e.target.classList.contains('thumb'))thumbs[cur].focus();e.preventDefault();}
+  });
+  // Glisser sur téléphone
+  let sx=null,sy=0;const stage=document.getElementById('stage');
+  stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;sx=e.clientX;sy=e.clientY;});
+  stage.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))go(cur+(dx<0?1:-1),dx<0?1:-1);});
+  // Pause quand le carrousel n'est pas visible
+  new IntersectionObserver(es=>es.forEach(en=>{const s=slides[cur];if(!s)return;const v=s.querySelector('video');if(en.isIntersecting){if(v&&!reduce)v.play().catch(()=>{});if(!raf&&active)raf=requestAnimationFrame(run);}else{if(v)v.pause();cancelAnimationFrame(raf);raf=0;}})).observe(car);
+  go(0,1);
+})();
+</script>
+
+</body></html>
