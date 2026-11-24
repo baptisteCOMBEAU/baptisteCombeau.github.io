@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Babarchive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
 <style>
 /* Page projet : même identité que le portfolio, une colonne centrée, sans démo */
 :root{
   --bg:#0F1220; --surface:#171B2C; --ink:#E7E9F2; --muted:#9097B0; --line:#2A3048;
   --accent:#E8DD4C; --wire:#6FA2FF; --gold:#E8DD4C; --on-gold:#1A1405; --code:#0B0E19; --to-srv:#FF8A5C; --to-cli:#3FD0B5; --both:#B9A2FF;
-  --f-display:"Unbounded","Segoe UI",system-ui,sans-serif;
-  --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --f-display:"Syne","Segoe UI",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Consolas,monospace;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -38,7 +38,8 @@ h1{font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,5.5vw,3.4re
 .meta b{color:var(--ink);font-weight:500}
 .meta a,.credit a{color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor}
 .meta a:hover,.credit a:hover{filter:brightness(1.15)}
-
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.85rem;font-weight:500;color:var(--on-gold);background:var(--gold);text-decoration:none;padding:10px 18px;border-radius:3px}
+.btn:hover{filter:brightness(1.1)}
 
 section{padding-block:48px;border-top:1px solid var(--line)}
 section > .label, section > h2, section > .intro{text-align:center}
@@ -50,7 +51,6 @@ h3{font-family:var(--f-display);font-weight:500;font-size:1.05rem;margin:0;line-
 .card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;min-width:0}
 .card p{margin:0;color:var(--muted);font-size:.95rem}
 .card .k{font-family:var(--f-mono);font-size:.72rem;color:var(--accent)}
-
 
 .table-box{overflow-x:auto;border:1px solid var(--line);border-radius:6px;max-width:760px;margin:0 auto}
 table{border-collapse:collapse;width:100%;font-size:.9rem}
@@ -100,14 +100,40 @@ pre code{color:inherit;font-size:inherit}
 
 /* Deux vues : Générale (par défaut) et Détail */
 .hero{padding-bottom:44px}
-.more{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding-block:44px;border-top:1px solid var(--line)}
-.more p{margin:0;color:var(--muted);max-width:36em}
-.more button{display:inline-flex;align-items:center;gap:10px;font:inherit;font-family:var(--f-mono);font-size:.85rem;font-weight:500;color:var(--accent);background:transparent;border:1px solid var(--accent);border-radius:3px;padding:10px 18px;cursor:pointer}
-.more button:hover{background:var(--accent);color:var(--on-gold)}
-.more .chev{width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .25s}
-.more button[aria-expanded="true"] .chev{transform:translateY(2px) rotate(-135deg)}
-#vue-detail{overflow:hidden}
 .panel-media{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:44px}
+
+/* ===== Code couleur du site =====
+   Titre de page, titres d'éléments (h1, h3, noms de projets)  : jaune  --c-title
+   Titres de section (h2)                                     : blanc  --c-heading
+   Texte principal (accroche, listes, cellules)               : blanc  --c-text
+   Descriptions (paragraphes secondaires, notes, légendes)    : gris   --c-desc
+   Étiquettes (surtitres, catégories, en-têtes de tableau)    : gris, mono, majuscules --c-label
+   Code cité (fonctions, fichiers, options, mots-clés)        : bleu, mono --c-code
+   Liens et boutons                                           : jaune  --c-link
+   Valeur mise en avant (meilleur résultat)                   : fond jaune
+*/
+:root{--c-title:var(--gold);--c-heading:var(--ink);--c-text:var(--ink);--c-desc:var(--muted);--c-label:var(--muted);--c-code:var(--wire);--c-link:var(--accent)}
+h1:not(.hero-name),h3,.info h3{color:var(--c-title)}
+h2{color:var(--c-heading)}
+.lead,.role li,.lex-row code,td,.tag,.keys div,.feat-keys kbd{color:var(--c-text)}
+.intro,.card p,.impl p,.feat p,.code-block .txt p,.credit,.table-note,figcaption,.label,.k,.card .k,.impl .k,.feat-keys .ver,.lex-group .label,.status,.info .status,th,thead th,thead tr:first-child th{color:var(--c-label)}
+.k,.feat-keys .ver,.status{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.k code{text-transform:none;letter-spacing:0;font-size:1.05em}
+code{color:var(--c-code)}
+pre code{color:inherit}
+td:nth-child(2){color:var(--c-text)}
+td.best{color:var(--on-gold)}
+.info p{opacity:1}
+/* Fonctionnalités : liste en deux colonnes, chapitres vidéo */
+.featlist{list-style:none;margin:0 auto;padding:0;max-width:960px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:48px;text-align:left}
+.featlist li{border-top:1px solid var(--line);padding:16px 0 18px;min-width:0}
+.featlist .fl-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.featlist h3{margin:0;font-size:1.05rem}
+.featlist p{margin:6px 0 0;color:var(--muted);font-size:.95rem}
+.featlist .ts{flex:none;font:inherit;font-family:var(--f-mono);font-size:.78rem;color:var(--accent);background:none;border:0;border-bottom:1px dashed currentColor;padding:0 0 1px;cursor:pointer;white-space:nowrap}
+.featlist .ts:hover,.featlist .ts:focus-visible{color:var(--ink)}
+.featlist .ts .ver{color:var(--muted);margin-right:6px}
+@media (max-width:700px){.featlist{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -120,21 +146,23 @@ pre code{color:inherit;font-size:inherit}
     <div class="label">Projet de novembre 2026</div>
     <h1>Babarchive</h1>
     <p class="lead">Une bibliothèque C++20 qui range des fichiers dans une archive <code>.babar</code>, et l'outil en ligne de commande qui va avec. Les fichiers sont compressés et extraits par blocs avec zlib : quelle que soit sa taille, un fichier n'est jamais chargé entier en mémoire.</p>
-    <div class="tags"><span class="tag">C++20</span><span class="tag">zlib</span><span class="tag">CMake</span><span class="tag">std::filesystem</span></div>
-    <div class="meta"><span><b>Équipe</b> binôme avec Vivien Singier</span><span><b>Durée</b> une semaine, 13 – 19 nov.</span><span><b>Code</b> <a href="https://github.com/vivienSINGIER/Babarchive" target="_blank" rel="noopener">GitHub</a></span></div>
+    <div class="meta"><span><b>Équipe</b> binôme avec <a href="https://www.linkedin.com/in/vivien-singier-57764232b" target="_blank" rel="noopener">Vivien Singier</a></span></div>
+    <a class="btn" href="https://github.com/vivienSINGIER/Babarchive" target="_blank" rel="noopener">Voir le code sur GitHub</a>
   </div>
 
   <div id="vue-generale">
   <section>
     <div class="label">Fonctionnalités</div>
     <h2>Ce que fait l'archive</h2>
-    <div class="cards">
-      <article class="card"><div class="k">Ajouter</div><p>Un fichier ou un dossier entier, compressé ou non, avec son arborescence et son extension.</p></article>
-      <article class="card"><div class="k">Extraire</div><p>Toute l'archive vers un dossier, ou un seul fichier vers un fichier de sortie.</p></article>
-      <article class="card"><div class="k">Retirer</div><p>Supprimer un fichier de l'archive sans toucher aux autres.</p></article>
-      <article class="card"><div class="k">Vérifier</div><p>À l'extraction, la taille et le CRC32 sont comparés à ceux enregistrés à l'écriture.</p></article>
-    </div>
+    <ul class="featlist">
+      <li><div class="fl-head"><h3>Ajouter</h3></div><p>Un fichier ou un dossier entier, compressé ou non, avec son arborescence et son extension.</p></li>
+      <li><div class="fl-head"><h3>Extraire</h3></div><p>Toute l'archive vers un dossier, ou un seul fichier vers un fichier de sortie.</p></li>
+      <li><div class="fl-head"><h3>Retirer</h3></div><p>Supprimer un fichier de l'archive sans toucher aux autres.</p></li>
+      <li><div class="fl-head"><h3>Vérifier</h3></div><p>À l'extraction, la taille et le CRC32 sont comparés à ceux enregistrés à l'écriture.</p></li>
+    </ul>
   </section>
+
+  </div>
 
   <section>
     <div class="label">Mon rôle</div>
@@ -145,148 +173,11 @@ pre code{color:inherit;font-size:inherit}
       <li>Outil en ligne de commande : création, ajout, extraction, suppression, listing, lecture et visualiseur hexadécimal</li>
       <li>Documentation technique : API de la bibliothèque, format de fichier, moteur d'assets</li>
     </ul>
-    <p class="credit">Projet académique réalisé en binôme avec Vivien Singier, qui a conçu le format d'archive, la lecture en flux (<code>FileStream</code>) et BabarsetEngine, un moteur d'assets construit sur l'archive (chargeurs OBJ et BMP, scènes, démo raylib).</p>
+    <p class="credit">Projet académique réalisé en binôme avec <a href="https://www.linkedin.com/in/vivien-singier-57764232b" target="_blank" rel="noopener">Vivien Singier</a>.</p>
   </section>
-
-  <div class="more">
-    <p>Le fonctionnement interne du projet, avec des extraits de code expliqués.</p>
-    <button type="button" id="more" aria-expanded="false" aria-controls="vue-detail"><span class="lbl">Afficher le détail</span><span class="chev" aria-hidden="true"></span></button>
-  </div>
-  </div>
-
-  <div id="vue-detail" hidden>
-  <section>
-    <div class="label">Format</div>
-    <h2>Un fichier .babar</h2>
-    <p class="intro">Un en-tête fixe, les fichiers les uns à la suite des autres, puis l'index en fin de fichier. L'en-tête donne la position de l'index : on peut lister l'archive sans lire les données. Ce format a été conçu par Vivien.</p>
-    <div class="table-box">
-      <table>
-        <thead><tr><th>Bloc</th><th>Taille</th><th>Contenu</th></tr></thead>
-        <tbody>
-          <tr><td><code>BaseHeader</code></td><td>24 octets</td><td>Nombre magique <code>BABA</code>, version, taille des données, position de l'index.</td></tr>
-          <tr><td><code>FileHeader</code></td><td>24 octets + ext.</td><td>Taille d'origine, taille stockée, type, flags (compressé…), CRC32, extension.</td></tr>
-          <tr><td>Données</td><td>variable</td><td>Le contenu du fichier, brut ou compressé par zlib. Un <code>FileHeader</code> et ses données par fichier.</td></tr>
-          <tr><td>Index</td><td>variable</td><td>Un descripteur par fichier : nom dans l'archive et position de son <code>FileHeader</code>.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section>
-    <div class="label">Dans le code</div>
-    <h2>Trois points clés</h2>
-    <p class="intro">Extraits de ma partie du dépôt, raccourcis pour la lecture.</p>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>Compresser en flux</h3>
-        <p>Le fichier source est lu par blocs de 16 Ko (réglable). Chaque bloc met à jour le CRC32 puis passe dans <code>deflate</code>, et la sortie est écrite tout de suite dans l'archive. La taille compressée n'étant connue qu'à la fin, on réserve la place de l'en-tête et on revient l'écrire après.</p>
-      </div>
-<pre><code><span class="k">do</span>
-{
-    _in.read(inChunk.data(), m_chunkSize);
-    <span class="k">const auto</span> n = <span class="k">static_cast</span>&lt;<span class="r">uInt</span>&gt;(_in.gcount());
-
-    crc = crc32(crc, (<span class="r">const Bytef</span>*)inChunk.data(), n);
-    flush = _in.eof() ? Z_FINISH : Z_NO_FLUSH;
-    zs.next_in  = (<span class="r">Bytef</span>*)inChunk.data();
-    zs.avail_in = n;
-
-    <span class="k">do</span>  <span class="c">// vider deflate tant que le tampon de sortie est plein</span>
-    {
-        zs.next_out  = (<span class="r">Bytef</span>*)outChunk.data();
-        zs.avail_out = outChunk.size();
-        ret = deflate(&amp;zs, flush);
-
-        <span class="k">const</span> std::<span class="r">size_t</span> produced = outChunk.size() - zs.avail_out;
-        _out.write(outChunk.data(), produced);
-        _fHeader.fixed.compressedSize += produced;
-    } <span class="k">while</span> (zs.avail_out == 0);
-} <span class="k">while</span> (flush != Z_FINISH);
-
-_out.seekp(pos);  <span class="c">// retour à l'en-tête réservé</span>
-_out.write((<span class="k">const char</span>*)&amp;_fHeader, <span class="k">sizeof</span>(FileHeaderFixed));</code></pre>
-    </div>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>Ne rien écrire hors du dossier cible</h3>
-        <p>Un nom de fichier dans l'archive peut contenir <code>../</code> ou un chemin absolu. Avant d'écrire, le chemin de destination est normalisé puis comparé au dossier d'extraction : s'il en sort, le fichier est ignoré et signalé, et l'extraction continue avec les suivants.</p>
-      </div>
-<pre><code>fs::<span class="r">path</span> <span class="k">const</span> root = _unpackLocation.lexically_normal();
-
-<span class="k">for</span> (<span class="k">auto</span>&amp; desc : m_descriptors)
-{
-    fs::<span class="r">path</span> rel = fs::path(desc.name).relative_path()
-                                      .lexically_normal();
-    fs::<span class="r">path</span> dst = (root / rel).lexically_normal();
-    fs::<span class="r">path</span> check = FileHelper::RelativeTo(dst, root);
-
-    <span class="k">if</span> (rel.empty() || check.empty() || *check.begin() == <span class="c">".."</span>)
-    {
-        err.details.push_back(<span class="c">/* "invalid file name ..., skipped" */</span>);
-        <span class="k">continue</span>;  <span class="c">// les autres fichiers sont extraits</span>
-    }
-    ...
-}</code></pre>
-    </div>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>Vérifier ce qui sort</h3>
-        <p>L'extraction suit le même principe à l'envers : lecture par blocs, <code>inflate</code>, écriture immédiate. Le CRC32 est recalculé sur les octets décompressés. Une archive tronquée ou modifiée renvoie une erreur précise au lieu d'un fichier faux.</p>
-      </div>
-<pre><code><span class="k">if</span> (ret != Z_STREAM_END)
-    <span class="k">return</span> Error::Io(<span class="c">"compressed data stream is incomplete"</span>);
-
-<span class="k">if</span> (written != _fHeader.fixed.uncompressedSize)
-    <span class="k">return</span> Error::Io(<span class="c">"unpacked size doesn't match the file header"</span>);
-
-<span class="k">if</span> ((<span class="r">uint32_t</span>)crc != _fHeader.fixed.crc32)
-    <span class="k">return</span> Error::Io(<span class="c">"crc32 mismatch, the archive may be corrupted"</span>);</code></pre>
-    </div>
-  </section>
-
-  <section>
-    <div class="label">Outil</div>
-    <h2>La ligne de commande</h2>
-    <p class="intro">L'exécutable <code>Babarchive</code> s'appuie uniquement sur la bibliothèque. Chaque commande est déclarée dans une table avec son usage et son nombre d'arguments minimum et maximum : la même table valide l'appel et génère l'aide.</p>
-    <div class="table-box">
-      <table>
-        <thead><tr><th>Commande</th><th>Alias</th><th>Rôle</th></tr></thead>
-        <tbody>
-          <tr><td><code>--create</code></td><td><code>--c</code></td><td>Crée une archive vide.</td></tr>
-          <tr><td><code>--pack</code></td><td><code>--p</code></td><td>Ajoute un fichier ou un dossier, avec compression en option.</td></tr>
-          <tr><td><code>--unpack</code></td><td><code>--u</code></td><td>Extrait toute l'archive dans un dossier.</td></tr>
-          <tr><td><code>--read</code></td><td><code>--rd</code></td><td>Extrait un seul fichier vers un fichier de sortie.</td></tr>
-          <tr><td><code>--remove</code></td><td><code>--r</code></td><td>Retire un fichier de l'archive.</td></tr>
-          <tr><td><code>--list</code></td><td><code>--l</code></td><td>Liste le contenu : nom, extension, taille d'origine, taille stockée et taux de compression.</td></tr>
-          <tr><td><code>--hex</code></td><td><code>--x</code></td><td>Affiche n'importe quel fichier en hexadécimal, une archive par exemple.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-  </div>
 
   <footer><a href="../index.html">← Retour au portfolio</a><span>© 2026 Baptiste Combeau</span></footer>
 </div>
 
-<script>
-(function(){
-  const btn=document.getElementById('more'), box=document.getElementById('vue-detail'), label=btn.querySelector('.lbl');
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function set(open,animate){
-    btn.setAttribute('aria-expanded',open);label.textContent=open?'Masquer le détail':'Afficher le détail';
-    try{history.replaceState(null,'',open?'#detail':location.pathname+location.search);}catch(e){}
-    if(open){box.hidden=false;if(animate&&!reduce&&box.animate)box.animate([{height:'0px',opacity:0},{height:box.scrollHeight+'px',opacity:1}],{duration:450,easing:'cubic-bezier(.2,.8,.2,1)'});}
-    else{
-      const done=()=>{box.hidden=true;if(btn.getBoundingClientRect().top<0)btn.scrollIntoView({block:'center'});};
-      if(animate&&!reduce&&box.animate){const a=box.animate([{height:box.offsetHeight+'px',opacity:1},{height:'0px',opacity:0}],{duration:300,easing:'ease-in'});a.onfinish=done;}else done();
-    }
-  }
-  btn.addEventListener('click',()=>set(btn.getAttribute('aria-expanded')!=='true',true));
-  if(location.hash==='#detail')set(true,false);
-})();
-</script>
 </body>
 </html>

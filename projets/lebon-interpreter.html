@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>LebonInterpreter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
 <style>
 /* Page projet : même identité que le portfolio, une colonne centrée */
 :root{
   --bg:#0F1220; --surface:#171B2C; --ink:#E7E9F2; --muted:#9097B0; --line:#2A3048;
   --accent:#E8DD4C; --wire:#6FA2FF; --gold:#E8DD4C; --on-gold:#1A1405; --code:#0B0E19;
-  --f-display:"Unbounded","Segoe UI",system-ui,sans-serif;
-  --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --f-display:"Syne","Segoe UI",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Consolas,monospace;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -59,7 +59,6 @@ pre .r{color:var(--wire)}
 .code-side{display:grid;gap:8px}
 .code-pair:has(> .code-side){align-items:start}
 .code-side .label{text-align:center}
-
 
 .pipeline{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin:0 auto 28px}
 .stage{font-family:var(--f-mono);font-size:.8rem;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:8px 12px}
@@ -125,14 +124,30 @@ pre code{color:inherit;font-size:inherit}
 
 /* Deux vues : Générale (par défaut) et Détail */
 .hero{padding-bottom:44px}
-.more{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding-block:44px;border-top:1px solid var(--line)}
-.more p{margin:0;color:var(--muted);max-width:36em}
-.more button{display:inline-flex;align-items:center;gap:10px;font:inherit;font-family:var(--f-mono);font-size:.85rem;font-weight:500;color:var(--accent);background:transparent;border:1px solid var(--accent);border-radius:3px;padding:10px 18px;cursor:pointer}
-.more button:hover{background:var(--accent);color:var(--on-gold)}
-.more .chev{width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .25s}
-.more button[aria-expanded="true"] .chev{transform:translateY(2px) rotate(-135deg)}
-#vue-detail{overflow:hidden}
 .panel-media{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:44px}
+
+/* ===== Code couleur du site =====
+   Titre de page, titres d'éléments (h1, h3, noms de projets)  : jaune  --c-title
+   Titres de section (h2)                                     : blanc  --c-heading
+   Texte principal (accroche, listes, cellules)               : blanc  --c-text
+   Descriptions (paragraphes secondaires, notes, légendes)    : gris   --c-desc
+   Étiquettes (surtitres, catégories, en-têtes de tableau)    : gris, mono, majuscules --c-label
+   Code cité (fonctions, fichiers, options, mots-clés)        : bleu, mono --c-code
+   Liens et boutons                                           : jaune  --c-link
+   Valeur mise en avant (meilleur résultat)                   : fond jaune
+*/
+:root{--c-title:var(--gold);--c-heading:var(--ink);--c-text:var(--ink);--c-desc:var(--muted);--c-label:var(--muted);--c-code:var(--wire);--c-link:var(--accent)}
+h1:not(.hero-name),h3,.info h3{color:var(--c-title)}
+h2{color:var(--c-heading)}
+.lead,.role li,.lex-row code,td,.tag,.keys div,.feat-keys kbd{color:var(--c-text)}
+.intro,.card p,.impl p,.feat p,.code-block .txt p,.credit,.table-note,figcaption,.label,.k,.card .k,.impl .k,.feat-keys .ver,.lex-group .label,.status,.info .status,th,thead th,thead tr:first-child th{color:var(--c-label)}
+.k,.feat-keys .ver,.status{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.k code{text-transform:none;letter-spacing:0;font-size:1.05em}
+code{color:var(--c-code)}
+pre code{color:inherit}
+td:nth-child(2){color:var(--c-text)}
+td.best{color:var(--on-gold)}
+.info p{opacity:1}
 </style>
 </head>
 <body>
@@ -195,21 +210,9 @@ pre code{color:inherit;font-size:inherit}
       </div>
     </div>
 
-    <div class="code-block">
-      <div class="txt">
-        <h3>Fibonacci en Lebon</h3>
-        <p>Exemple d'un programme qui calcule la suite de Fibonacci.</p>
-      </div>
-<pre><code><span class="k">zafer</span> fibo(n)
-<span class="k">ouver</span>
-    <span class="k">kan</span> n <span class="k">piti</span> 2 <span class="k">ouver</span> <span class="k">ran</span> n <span class="k">fèrm</span>
-    <span class="k">ran</span> fibo(n <span class="k">mwin</span> 1) <span class="k">èk</span> fibo(n <span class="k">mwin</span> 2)
-<span class="k">fèrm</span>
-
-afise(fibo(24))</code></pre>
-    </div>
-
   </section>
+
+  </div>
 
   <section>
     <div class="label">Mon rôle</div>
@@ -222,142 +225,7 @@ afise(fibo(24))</code></pre>
     <p class="credit">Projet académique réalisé en équipe de trois avec <a href="https://www.linkedin.com/in/vivien-singier-57764232b" target="_blank" rel="noopener">Vivien Singier</a> et <a href="https://www.linkedin.com/in/ma%C3%ABl-lemaire" target="_blank" rel="noopener">Maël Lemaire</a>.</p>
   </section>
 
-  <div class="more">
-    <p>Le fonctionnement interne du projet, avec des extraits de code expliqués.</p>
-    <button type="button" id="more" aria-expanded="false" aria-controls="vue-detail"><span class="lbl">Afficher le détail</span><span class="chev" aria-hidden="true"></span></button>
-  </div>
-  </div>
-
-  <div id="vue-detail" hidden>
-  <section>
-    <div class="label">Architecture</div>
-    <h2>Du texte au code machine</h2>
-    <p class="intro">Le code source passe par les mêmes étapes jusqu'à l'arbre syntaxique typé. Ensuite, trois moteurs d'exécution sont au choix, sélectionnés avec l'option <code>--mode</code>.</p>
-    <div class="pipeline" aria-label="Étapes de l'interpréteur">
-      <span class="stage">Lexer</span><span class="arrow" aria-hidden="true">→</span>
-      <span class="stage">Parser</span><span class="arrow" aria-hidden="true">→</span>
-      <span class="stage">AST</span><span class="arrow" aria-hidden="true">→</span>
-      <span class="stage">Analyse sémantique</span><span class="arrow" aria-hidden="true">→</span>
-      <span class="stage">Exécution</span>
-    </div>
-    <div class="cards">
-      <article class="card"><div class="k"><code>--mode=tree</code></div><h3>Parcours d'arbre</h3><p>L'interpréteur visite directement les nœuds de l'AST et évalue chaque expression. C'est le plus simple, et le plus lent.</p></article>
-      <article class="card"><div class="k"><code>--mode=vm</code></div><h3>VM à registres</h3><p>Le compilateur traduit l'AST en bytecode, exécuté par une machine virtuelle à registres.</p></article>
-      <article class="card"><div class="k"><code>--mode=jit</code></div><h3>Compilation JIT</h3><p>Un générateur de code parcourt l'AST et écrit directement des instructions x64 en mémoire exécutable, appelées ensuite comme une fonction native.</p></article>
-    </div>
-  </section>
-
-  <section>
-    <div class="label">La machine virtuelle</div>
-    <h2>Un bytecode sur 32 bits</h2>
-    <p class="intro">Chaque instruction tient sur 32 bits : un opcode et trois opérandes de 8 bits, soit jusqu'à 256 registres par fonction. La VM compte 35 instructions, dont des variantes qui prennent directement une constante pour éviter un chargement de plus.</p>
-
-    <div class="code-pair">
-      <div class="code-side">
-        <div class="label">Source Lebon</div>
-<pre><code><span class="k">keksoz</span> age <span class="k">idon</span> 20
-<span class="k">kan</span> age <span class="k">plis-gran-egal</span> 18
-<span class="k">ouver</span>
-    afise(<span class="r">"Majeur"</span>)
-<span class="k">fèrm</span>
-<span class="k">otreman</span>
-<span class="k">ouver</span>
-    afise(<span class="r">"Mineur"</span>)
-<span class="k">fèrm</span></code></pre>
-      </div>
-      <div class="code-side">
-        <div class="label">Bytecode (--dump-bytecode)</div>
-<pre><code>0000  <span class="k">LOADK</span>     R0 K0       <span class="c">; 20</span>
-0001  <span class="k">SETGLOBAL</span> R0 G1       <span class="c">; age</span>
-0002  <span class="k">GETGLOBAL</span> R0 G1       <span class="c">; age</span>
-0003  <span class="k">GEK</span>       R0 R0 K1    <span class="c">; 18</span>
-0004  <span class="k">JMPIFNOT</span>  R0 -&gt; 0009
-0005  <span class="k">GETGLOBAL</span> R0 G0       <span class="c">; afise</span>
-0006  <span class="k">LOADK</span>     R1 K2       <span class="c">; "Majeur"</span>
-0007  <span class="k">CALL</span>      R0 1
-0008  <span class="k">JMP</span>       -&gt; 0012
-0009  <span class="k">GETGLOBAL</span> R0 G0       <span class="c">; afise</span>
-0010  <span class="k">LOADK</span>     R1 K3       <span class="c">; "Mineur"</span>
-0011  <span class="k">CALL</span>      R0 1</code></pre>
-      </div>
-    </div>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>Des closures qui partagent leurs variables</h3>
-        <p>Une fonction interne peut lire et modifier une variable de sa fonction parente. Le compilateur repère les variables capturées et les fait passer par des upvalues (<code>GETUPVAL</code>, <code>SETUPVAL</code>). Ici, <code>ajoute</code> modifie le <code>total</code> de <code>compteur</code>.</p>
-      </div>
-<pre><code><span class="k">zafer</span> compteur(depa)
-<span class="k">ouver</span>
-    <span class="k">keksoz</span> total <span class="k">idon</span> depa
-    <span class="k">zafer</span> ajoute(n)
-    <span class="k">ouver</span>
-        total <span class="k">idon</span> total <span class="k">èk</span> n
-        <span class="k">ran</span> total
-    <span class="k">fèrm</span>
-    afise(ajoute(1))   <span class="c">koz 101 finkoz</span>
-    afise(ajoute(2))   <span class="c">koz 103 finkoz</span>
-    <span class="k">ran</span> ajoute(10)
-<span class="k">fèrm</span>
-afise(compteur(100)) <span class="c">koz 113 finkoz</span></code></pre>
-    </div>
-  </section>
-
-  <section>
-    <div class="label">Mesures</div>
-    <h2>Trois moteurs comparés</h2>
-    <p class="intro">Le mode <code>--bench</code> exécute chaque programme plusieurs fois avec les trois moteurs. Sur Fibonacci, qui enchaîne les appels de fonction, la VM est 16,6 fois plus rapide que le parcours d'arbre, et le JIT 48,9 fois.</p>
-    <div class="table-box">
-      <table>
-        <thead>
-          <tr><th></th><th colspan="2"><code>fibo.lbn</code></th><th colspan="2"><code>cordes.lbn</code></th></tr>
-          <tr><th>Moteur</th><th>médiane (ms)</th><th>gain</th><th>médiane (ms)</th><th>gain</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Parcours d'arbre</td><td>71,664</td><td><span class="gain">×1</span></td><td>31,502</td><td><span class="gain">×1</span></td></tr>
-          <tr><td>VM à registres</td><td>4,327</td><td><span class="gain up">×16,6</span></td><td>5,818</td><td><span class="gain up">×5,4</span></td></tr>
-          <tr><td>Compilation JIT</td><td>1,465</td><td><span class="gain up">×48,9</span></td><td>4,622</td><td><span class="gain up">×6,8</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="table-note">Gain par rapport au parcours d'arbre, médiane sur 100 exécutions. <code>cordes.lbn</code> fait 48 000 concaténations de chaînes, ce qui limite l'avance de la VM et du JIT.</p>
-  </section>
-
-  <section>
-    <div class="label">Outils</div>
-    <h2>Un interpréteur qu'on peut inspecter</h2>
-    <p class="intro">La ligne de commande permet d'afficher chaque étape et de mesurer le temps passé dans chacune. Une suite de tests couvre le lexer, le parser, l'analyse sémantique, le compilateur et la VM, avec les sorties attendues.</p>
-    <div class="opts">
-      <div><code>--mode=tree|vm|jit</code><span>choisit le moteur d'exécution</span></div>
-      <div><code>--dump-tokens</code><span>affiche les tokens</span></div>
-      <div><code>--dump-ast</code><span>affiche l'arbre syntaxique typé</span></div>
-      <div><code>--dump-bytecode</code><span>affiche le bytecode désassemblé</span></div>
-      <div><code>--trace</code><span>trace l'exécution</span></div>
-      <div><code>--time</code><span>temps passé dans chaque étape</span></div>
-      <div><code>--bench[=runs]</code><span>compare les trois moteurs</span></div>
-      <div><code>--test</code><span>lance la suite de tests</span></div>
-    </div>
-  </section>
-  </div>
-
   <footer><a href="../index.html">← Retour au portfolio</a><span>© 2026 Baptiste Combeau</span></footer>
 </div>
-<script>
-(function(){
-  const btn=document.getElementById('more'), box=document.getElementById('vue-detail'), label=btn.querySelector('.lbl');
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function set(open,animate){
-    btn.setAttribute('aria-expanded',open);label.textContent=open?'Masquer le détail':'Afficher le détail';
-    try{history.replaceState(null,'',open?'#detail':location.pathname+location.search);}catch(e){}
-    if(open){box.hidden=false;if(animate&&!reduce&&box.animate)box.animate([{height:'0px',opacity:0},{height:box.scrollHeight+'px',opacity:1}],{duration:450,easing:'cubic-bezier(.2,.8,.2,1)'});}
-    else{
-      const done=()=>{box.hidden=true;if(btn.getBoundingClientRect().top<0)btn.scrollIntoView({block:'center'});};
-      if(animate&&!reduce&&box.animate){const a=box.animate([{height:box.offsetHeight+'px',opacity:1},{height:'0px',opacity:0}],{duration:300,easing:'ease-in'});a.onfinish=done;}else done();
-    }
-  }
-  btn.addEventListener('click',()=>set(btn.getAttribute('aria-expanded')!=='true',true));
-  if(location.hash==='#detail')set(true,false);
-})();
-</script>
 </body>
 </html>

@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Life Game MASM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
 <style>
 /* Page projet : même identité que le portfolio, une colonne centrée, démo live en tête */
 :root{
   --bg:#0F1220; --surface:#171B2C; --ink:#E7E9F2; --muted:#9097B0; --line:#2A3048;
   --accent:#E8DD4C; --wire:#6FA2FF; --gold:#E8DD4C; --on-gold:#1A1405; --code:#0B0E19;
-  --f-display:"Unbounded","Segoe UI",system-ui,sans-serif;
-  --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --f-display:"Syne","Segoe UI",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Consolas,monospace;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -38,7 +38,6 @@ h1{font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,5.5vw,3.4re
 .tag{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--line);border-radius:3px;padding:2px 7px}
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.85rem;font-weight:500;color:var(--on-gold);background:var(--gold);text-decoration:none;padding:10px 18px;border-radius:3px}
 .btn:hover{filter:brightness(1.1)}
-
 
 section{padding-block:48px;border-top:1px solid var(--line)}
 section > .label, section > h2, section > .intro{text-align:center}
@@ -110,17 +109,43 @@ pre code{color:inherit;font-size:inherit}
 
 /* Deux vues : Générale (par défaut) et Détail */
 .hero{padding-bottom:44px}
-.more{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding-block:44px;border-top:1px solid var(--line)}
-.more p{margin:0;color:var(--muted);max-width:36em}
-.more button{display:inline-flex;align-items:center;gap:10px;font:inherit;font-family:var(--f-mono);font-size:.85rem;font-weight:500;color:var(--accent);background:transparent;border:1px solid var(--accent);border-radius:3px;padding:10px 18px;cursor:pointer}
-.more button:hover{background:var(--accent);color:var(--on-gold)}
-.more .chev{width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .25s}
-.more button[aria-expanded="true"] .chev{transform:translateY(2px) rotate(-135deg)}
-#vue-detail{overflow:hidden}
 .video{margin:0;width:100%;max-width:560px;display:flex;flex-direction:column;gap:8px}
 .video video{display:block;width:100%;max-width:100%;aspect-ratio:992/944;background:#0C0C0C;border:1px solid var(--line);border-radius:6px}
 .video figcaption{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);text-align:center}
 .panel-media{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:44px}
+
+/* ===== Code couleur du site =====
+   Titre de page, titres d'éléments (h1, h3, noms de projets)  : jaune  --c-title
+   Titres de section (h2)                                     : blanc  --c-heading
+   Texte principal (accroche, listes, cellules)               : blanc  --c-text
+   Descriptions (paragraphes secondaires, notes, légendes)    : gris   --c-desc
+   Étiquettes (surtitres, catégories, en-têtes de tableau)    : gris, mono, majuscules --c-label
+   Code cité (fonctions, fichiers, options, mots-clés)        : bleu, mono --c-code
+   Liens et boutons                                           : jaune  --c-link
+   Valeur mise en avant (meilleur résultat)                   : fond jaune
+*/
+:root{--c-title:var(--gold);--c-heading:var(--ink);--c-text:var(--ink);--c-desc:var(--muted);--c-label:var(--muted);--c-code:var(--wire);--c-link:var(--accent)}
+h1:not(.hero-name),h3,.info h3{color:var(--c-title)}
+h2{color:var(--c-heading)}
+.lead,.role li,.lex-row code,td,.tag,.keys div,.feat-keys kbd{color:var(--c-text)}
+.intro,.card p,.impl p,.feat p,.code-block .txt p,.credit,.table-note,figcaption,.label,.k,.card .k,.impl .k,.feat-keys .ver,.lex-group .label,.status,.info .status,th,thead th,thead tr:first-child th{color:var(--c-label)}
+.k,.feat-keys .ver,.status{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.k code{text-transform:none;letter-spacing:0;font-size:1.05em}
+code{color:var(--c-code)}
+pre code{color:inherit}
+td:nth-child(2){color:var(--c-text)}
+td.best{color:var(--on-gold)}
+.info p{opacity:1}
+/* Fonctionnalités : liste en deux colonnes, chapitres vidéo */
+.featlist{list-style:none;margin:0 auto;padding:0;max-width:960px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:48px;text-align:left}
+.featlist li{border-top:1px solid var(--line);padding:16px 0 18px;min-width:0}
+.featlist .fl-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.featlist h3{margin:0;font-size:1.05rem}
+.featlist p{margin:6px 0 0;color:var(--muted);font-size:.95rem}
+.featlist .ts{flex:none;font:inherit;font-family:var(--f-mono);font-size:.78rem;color:var(--accent);background:none;border:0;border-bottom:1px dashed currentColor;padding:0 0 1px;cursor:pointer;white-space:nowrap}
+.featlist .ts:hover,.featlist .ts:focus-visible{color:var(--ink)}
+.featlist .ts .ver{color:var(--muted);margin-right:6px}
+@media (max-width:700px){.featlist{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -132,7 +157,7 @@ pre code{color:inherit;font-size:inherit}
   <div class="hero">
     <div class="label">Projet de septembre 2026</div>
     <h1>Life Game MASM</h1>
-    <p class="lead">Le jeu de la vie de Conway sur une grille de 100 × 100, affiché dans la console Windows. Une même génération y est calculée de six façons, du C++ simple à l'assembleur x64 puis au SIMD sur des bits. Les six versions sont vérifiées entre elles et comparées par un benchmark intégré.</p>
+    <p class="lead">Le jeu de la vie de Conway sur une grille de 100 × 100, affiché dans la console Windows. Une même génération y est calculée de six façons, du C++ simple à l'assembleur x64 puis au SIMD sur des bits. Les six versions sont vérifiées entre elles et comparées par un benchmark intégré : sur une grille de 2000 × 2000, la plus rapide calcule une cellule environ 170 fois plus vite que le C++ de départ.</p>
     <a class="btn" href="https://github.com/baptisteCOMBEAU/Life_Game_MASM" target="_blank" rel="noopener">Voir le code sur GitHub</a>
 
   </div>
@@ -151,156 +176,21 @@ pre code{color:inherit;font-size:inherit}
   <section>
     <div class="label">Implémentations</div>
     <h2>Six façons de calculer une génération</h2>
-    <p class="intro">Toutes les versions lisent la grille courante et écrivent la suivante dans une seconde grille. Une bordure de cellules mortes autour de la grille évite de tester les bords.</p>
-    <div class="impls">
-      <article class="impl">
-        <div class="k"><code>GenerationCpp</code></div>
-        <h3>C++ de référence</h3>
-        <p>Deux boucles, huit voisins additionnés un par un, puis la règle de survie et de naissance. C'est la version qui sert de vérité pour toutes les autres.</p>
-      </article>
-      <article class="impl">
-        <div class="k"><code>GenerationASM</code> dans <code>fonctions.asm</code></div>
-        <h3>Assembleur MASM x64</h3>
-        <p>La même boucle écrite à la main en assembleur, appelée depuis le C++ selon la convention d'appel Windows x64. La règle s'écrit sans branchement avec <code>sete</code>, <code>and</code> et <code>or</code>.</p>
-      </article>
-      <article class="impl">
-        <div class="k"><code>GenerationSIMD_Old</code></div>
-        <h3>SIMD v1</h3>
-        <p>Instructions SSE2 : 16 cellules d'un octet traitées par registre de 128 bits. Les cellules en fin de ligne repassent par la boucle scalaire.</p>
-      </article>
-      <article class="impl">
-        <div class="k"><code>GenerationSIMD_V2</code></div>
-        <h3>SIMD v2</h3>
-        <p>Plus de boucle scalaire : le dernier bloc de chaque ligne recule pour chevaucher le précédent, et recalcule les mêmes cellules sans rien casser.</p>
-      </article>
-      <article class="impl">
-        <div class="k"><code>GenerationSIMD</code></div>
-        <h3>SIMD v3</h3>
-        <p>Calcul par tuiles de 16 × 16. La somme horizontale de chaque ligne est gardée en registre et sert pour trois lignes de sortie : 3 chargements par bloc au lieu de 9.</p>
-      </article>
-      <article class="impl">
-        <div class="k"><code>GenerationBitsSIMD</code></div>
-        <h3>Bitboard SIMD</h3>
-        <p>Une cellule par bit : 128 cellules par registre. Les voisins sont additionnés avec des additionneurs complets, comme dans un circuit électronique.</p>
-      </article>
-    </div>
+    <p class="intro">Le même calcul écrit six fois, de la version la plus simple à la plus rapide.</p>
+    <ul class="featlist">
+      <li><div class="fl-head"><h3>C++ de référence</h3></div><p>La version de base, qui sert de référence pour vérifier toutes les autres.</p></li>
+      <li><div class="fl-head"><h3>Assembleur MASM x64</h3></div><p>La même boucle écrite à la main en assembleur, appelée depuis le C++.</p></li>
+      <li><div class="fl-head"><h3>SIMD v1</h3></div><p>Seize cellules calculées en même temps avec les instructions SSE2.</p></li>
+      <li><div class="fl-head"><h3>SIMD v2</h3></div><p>Toute la ligne est traitée en SIMD, sans repasser par une boucle classique en fin de ligne.</p></li>
+      <li><div class="fl-head"><h3>SIMD v3</h3></div><p>Un calcul par tuiles qui réutilise les sommes déjà faites et charge trois fois moins de données.</p></li>
+      <li><div class="fl-head"><h3>Bitboard SIMD</h3></div><p>Une cellule par bit, soit 128 cellules traitées par registre.</p></li>
+    </ul>
   </section>
 
-  <section>
-    <div class="label">Utilisation</div>
-    <h2>Commandes dans la console</h2>
-    <div class="keys">
-      <div><kbd>Espace</kbd> pause</div>
-      <div><kbd>N</kbd> pas à pas</div>
-      <div><kbd>R</kbd> grille aléatoire</div>
-      <div><kbd>+</kbd> <kbd>−</kbd> vitesse</div>
-      <div><kbd>B</kbd> benchmark</div>
-      <div><kbd>Q</kbd> quitter</div>
-    </div>
-  </section>
-
-  <div class="more">
-    <p>Le fonctionnement interne du projet, avec des extraits de code expliqués.</p>
-    <button type="button" id="more" aria-expanded="false" aria-controls="vue-detail"><span class="lbl">Afficher le détail</span><span class="chev" aria-hidden="true"></span></button>
-  </div>
-  </div>
-
-  <div id="vue-detail" hidden>
-  <section>
-    <div class="label">Dans le code</div>
-    <h2>Trois idées clés</h2>
-    <p class="intro">Extraits du dépôt, raccourcis pour la lecture.</p>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>La règle sans branchement en assembleur</h3>
-        <p>Après avoir additionné les huit voisins dans <code>r14b</code>, la nouvelle valeur s'obtient avec deux comparaisons. Une cellule vit si elle a 3 voisins, ou 2 voisins et était déjà vivante.</p>
-      </div>
-<pre><code><span class="k">cmp</span>  <span class="r">r14b</span>, 3
-<span class="k">sete</span> <span class="r">bl</span>                 <span class="c">; bl  = (voisins == 3)</span>
-<span class="k">cmp</span>  <span class="r">r14b</span>, 2
-<span class="k">sete</span> <span class="r">r15b</span>               <span class="c">; r15b = (voisins == 2)</span>
-<span class="k">and</span>  <span class="r">r15b</span>, [<span class="r">rcx</span> + <span class="r">r12</span>]    <span class="c">; ... et déjà vivante</span>
-<span class="k">or</span>   <span class="r">bl</span>, <span class="r">r15b</span>
-<span class="k">mov</span>  BYTE PTR [<span class="r">rdx</span> + <span class="r">r12</span>], <span class="r">bl</span></code></pre>
-    </div>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>Une seule comparaison pour 16 cellules</h3>
-        <p>En SIMD v3, le nombre de voisins vaut la somme du carré 3 × 3 moins le centre. L'astuce : <code>(voisins | centre) == 3</code> couvre à la fois la naissance (3 voisins) et la survie (2 voisins et vivante).</p>
-      </div>
-<pre><code><span class="c">// Somme des 9 cellules du carré 3x3, moins le centre</span>
-<span class="k">const</span> __m128i voisins = _mm_sub_epi8(
-    _mm_add_epi8(_mm_add_epi8(hHaut, hMilieu), hBas), centre);
-
-<span class="c">// 3 | x = 3 ; 2 | 1 = 3 ; 2 | 0 = 2</span>
-<span class="k">const</span> __m128i vivant = _mm_and_si128(
-    _mm_cmpeq_epi8(_mm_or_si128(voisins, centre), three), one);
-
-<span class="c">// La ligne du milieu devient celle du haut : pas de recalcul</span>
-hHaut = hMilieu;
-hMilieu = hBas;</code></pre>
-    </div>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>Compter avec des portes logiques</h3>
-        <p>Dans la version bitboard, un nombre ne tient pas dans un bit. Chaque somme est donc rangée sur deux registres, et trois bits s'additionnent avec un additionneur complet, pour 128 cellules à la fois.</p>
-      </div>
-<pre><code><span class="c">// somme = a ^ b ^ c
-// retenue = 1 si au moins deux bits sont à 1</span>
-<span class="k">inline</span> NombreDeuxBits AdditionneurComplet(
-    __m128i a, __m128i b, __m128i c)
-{
-    <span class="k">const</span> __m128i aOuExclusifB = OuExclusif(a, b);
-    NombreDeuxBits resultat;
-    resultat.poids1 = OuExclusif(aOuExclusifB, c);
-    resultat.poids2 = Ou(Et(a, b), Et(aOuExclusifB, c));
-    <span class="k">return</span> resultat;
-}</code></pre>
-    </div>
-  </section>
-
-  <section>
-    <div class="label">Vérification et mesures</div>
-    <h2>Benchmark intégré</h2>
-    <p class="intro">Au lancement, le programme fait tourner 200 générations avec l'ASM, le C++, le SIMD v3 et le bitboard, et s'arrête si une grille diffère. La touche <kbd>B</kbd> lance ensuite un benchmark : temps moyen par cellule, meilleur de trois essais, sur plusieurs tailles de grille choisies pour tester les fins de ligne.</p>
-    <div class="table-box">
-      <table>
-        <thead><tr><th>Grille</th><th>C++</th><th>ASM</th><th>SIMD v1</th><th>SIMD v2</th><th>SIMD v3</th><th>Bits SIMD</th><th>v3 / Bits</th></tr></thead>
-        <tbody>
-          <tr><td>17 × 2000</td><td>1,606</td><td>2,099</td><td>0,187</td><td>0,152</td><td class="best">0,105</td><td>0,151</td><td class="ratio">×0,69</td></tr>
-          <tr><td>31 × 2000</td><td>1,964</td><td>2,088</td><td>0,897</td><td>0,084</td><td class="best">0,057</td><td>0,083</td><td class="ratio">×0,69</td></tr>
-          <tr><td>100 × 100</td><td>1,218</td><td>2,079</td><td>0,111</td><td>0,082</td><td>0,067</td><td class="best">0,025</td><td class="ratio">×2,63</td></tr>
-          <tr><td>100 × 2000</td><td>2,363</td><td>2,106</td><td>0,140</td><td>0,084</td><td>0,065</td><td class="best">0,026</td><td class="ratio">×2,55</td></tr>
-          <tr><td>2000 × 2000</td><td>3,626</td><td>2,110</td><td>0,072</td><td>0,072</td><td>0,070</td><td class="best">0,021</td><td class="ratio">×3,33</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="table-note">Temps par cellule en nanosecondes, compilation Release, meilleur de 3 essais. En jaune, la version la plus rapide pour chaque grille. La dernière colonne indique combien de fois le bitboard est plus rapide que le SIMD v3 : sur les grilles étroites de 17 et 31 colonnes, c'est le SIMD v3 qui l'emporte. Sur 2000 × 2000, le bitboard calcule une cellule environ 170 fois plus vite que le C++ de référence.</p>
-  </section>
   </div>
 
   <footer><a href="../index.html">← Retour au portfolio</a><span>© 2026 Baptiste Combeau</span></footer>
 </div>
 
-<script>
-(function(){
-  const btn=document.getElementById('more'), box=document.getElementById('vue-detail'), label=btn.querySelector('.lbl');
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function set(open,animate){
-    btn.setAttribute('aria-expanded',open);label.textContent=open?'Masquer le détail':'Afficher le détail';
-    try{history.replaceState(null,'',open?'#detail':location.pathname+location.search);}catch(e){}
-    if(open){box.hidden=false;if(animate&&!reduce&&box.animate)box.animate([{height:'0px',opacity:0},{height:box.scrollHeight+'px',opacity:1}],{duration:450,easing:'cubic-bezier(.2,.8,.2,1)'});}
-    else{
-      const done=()=>{box.hidden=true;if(btn.getBoundingClientRect().top<0)btn.scrollIntoView({block:'center'});};
-      if(animate&&!reduce&&box.animate){const a=box.animate([{height:box.offsetHeight+'px',opacity:1},{height:'0px',opacity:0}],{duration:300,easing:'ease-in'});a.onfinish=done;}else done();
-    }
-  }
-  btn.addEventListener('click',()=>set(btn.getAttribute('aria-expanded')!=='true',true));
-  if(location.hash==='#detail')set(true,false);
-})();
-</script>
 </body>
 </html>

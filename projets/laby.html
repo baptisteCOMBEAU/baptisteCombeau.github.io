@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Laby</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
 <style>
 /* Page projet : même identité que le portfolio, une colonne centrée, le moteur physique au centre */
 :root{
   --bg:#0F1220; --surface:#171B2C; --ink:#E7E9F2; --muted:#9097B0; --line:#2A3048;
   --accent:#E8DD4C; --wire:#6FA2FF; --gold:#E8DD4C; --on-gold:#1A1405; --code:#0B0E19;
-  --f-display:"Unbounded","Segoe UI",system-ui,sans-serif;
-  --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --f-display:"Syne","Segoe UI",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Consolas,monospace;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -106,14 +106,40 @@ pre code{color:inherit;font-size:inherit}
 
 /* Deux vues : Générale (par défaut) et Détail */
 .hero{padding-bottom:44px}
-.more{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding-block:44px;border-top:1px solid var(--line)}
-.more p{margin:0;color:var(--muted);max-width:36em}
-.more button{display:inline-flex;align-items:center;gap:10px;font:inherit;font-family:var(--f-mono);font-size:.85rem;font-weight:500;color:var(--accent);background:transparent;border:1px solid var(--accent);border-radius:3px;padding:10px 18px;cursor:pointer}
-.more button:hover{background:var(--accent);color:var(--on-gold)}
-.more .chev{width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .25s}
-.more button[aria-expanded="true"] .chev{transform:translateY(2px) rotate(-135deg)}
-#vue-detail{overflow:hidden}
 .panel-media{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:44px}
+
+/* ===== Code couleur du site =====
+   Titre de page, titres d'éléments (h1, h3, noms de projets)  : jaune  --c-title
+   Titres de section (h2)                                     : blanc  --c-heading
+   Texte principal (accroche, listes, cellules)               : blanc  --c-text
+   Descriptions (paragraphes secondaires, notes, légendes)    : gris   --c-desc
+   Étiquettes (surtitres, catégories, en-têtes de tableau)    : gris, mono, majuscules --c-label
+   Code cité (fonctions, fichiers, options, mots-clés)        : bleu, mono --c-code
+   Liens et boutons                                           : jaune  --c-link
+   Valeur mise en avant (meilleur résultat)                   : fond jaune
+*/
+:root{--c-title:var(--gold);--c-heading:var(--ink);--c-text:var(--ink);--c-desc:var(--muted);--c-label:var(--muted);--c-code:var(--wire);--c-link:var(--accent)}
+h1:not(.hero-name),h3,.info h3{color:var(--c-title)}
+h2{color:var(--c-heading)}
+.lead,.role li,.lex-row code,td,.tag,.keys div,.feat-keys kbd{color:var(--c-text)}
+.intro,.card p,.impl p,.feat p,.code-block .txt p,.credit,.table-note,figcaption,.label,.k,.card .k,.impl .k,.feat-keys .ver,.lex-group .label,.status,.info .status,th,thead th,thead tr:first-child th{color:var(--c-label)}
+.k,.feat-keys .ver,.status{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.k code{text-transform:none;letter-spacing:0;font-size:1.05em}
+code{color:var(--c-code)}
+pre code{color:inherit}
+td:nth-child(2){color:var(--c-text)}
+td.best{color:var(--on-gold)}
+.info p{opacity:1}
+/* Fonctionnalités : liste en deux colonnes, chapitres vidéo */
+.featlist{list-style:none;margin:0 auto;padding:0;max-width:960px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:48px;text-align:left}
+.featlist li{border-top:1px solid var(--line);padding:16px 0 18px;min-width:0}
+.featlist .fl-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.featlist h3{margin:0;font-size:1.05rem}
+.featlist p{margin:6px 0 0;color:var(--muted);font-size:.95rem}
+.featlist .ts{flex:none;font:inherit;font-family:var(--f-mono);font-size:.78rem;color:var(--accent);background:none;border:0;border-bottom:1px dashed currentColor;padding:0 0 1px;cursor:pointer;white-space:nowrap}
+.featlist .ts:hover,.featlist .ts:focus-visible{color:var(--ink)}
+.featlist .ts .ver{color:var(--muted);margin-right:6px}
+@media (max-width:700px){.featlist{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -148,13 +174,16 @@ pre code{color:inherit;font-size:inherit}
   <section>
     <div class="label">Le jeu</div>
     <h2>Survivre dans le labyrinthe</h2>
-    <div class="cards">
-      <article class="card"><div class="k">Labyrinthe</div><p>Généré par le jeu et agrandi au fil des niveaux. L'inventaire est conservé d'un niveau à l'autre.</p></article>
-      <article class="card"><div class="k">Gaz</div><p>Des murs de gaz se referment sur le labyrinthe et infligent des dégâts aux joueurs pris derrière.</p></article>
-      <article class="card"><div class="k">Objets</div><p>Inventaire à trois emplacements : bâtons lumineux, nourriture, soins. Les objets se lancent et suivent la physique.</p></article>
-      <article class="card"><div class="k">Ennemis</div><p>Un ennemi terminé et deux autres en cours. Côté joueur, une barre de vie et un réticule.</p></article>
-    </div>
+    <p class="intro">Un clic sur l'horodatage lance la vidéo au moment où la fonctionnalité apparaît.</p>
+    <ul class="featlist">
+      <li><div class="fl-head"><h3>Labyrinthe</h3><button type="button" class="ts" data-video="0" data-t="76" aria-label="Voir labyrinthe dans la vidéo à 1:16">1:16</button></div><p>Généré par le jeu et agrandi au fil des niveaux. L'inventaire est conservé d'un niveau à l'autre.</p></li>
+      <li><div class="fl-head"><h3>Gaz</h3><button type="button" class="ts" data-video="0" data-t="16" aria-label="Voir gaz dans la vidéo à 0:16">0:16</button></div><p>Des murs de gaz se referment sur le labyrinthe et infligent des dégâts aux joueurs pris derrière.</p></li>
+      <li><div class="fl-head"><h3>Objets</h3><button type="button" class="ts" data-video="0" data-t="24" aria-label="Voir objets dans la vidéo à 0:24">0:24</button></div><p>Inventaire à trois emplacements : bâtons lumineux, nourriture, soins. Les objets se lancent et suivent la physique.</p></li>
+      <li><div class="fl-head"><h3>Ennemis</h3></div><p>Un ennemi terminé et deux autres en cours. Côté joueur, une barre de vie et un réticule.</p></li>
+    </ul>
   </section>
+
+  </div>
 
   <section>
     <div class="label">Mon rôle</div>
@@ -168,134 +197,15 @@ pre code{color:inherit;font-size:inherit}
     <p class="credit">Projet académique réalisé en équipe de trois avec <a href="https://www.linkedin.com/in/vivien-singier-57764232b" target="_blank" rel="noopener">Vivien Singier</a> et <a href="https://www.linkedin.com/in/auxence-villeret-7a764132b/" target="_blank" rel="noopener">Auxence Villeret</a>.</p>
   </section>
 
-  <div class="more">
-    <p>Le fonctionnement interne du projet, avec des extraits de code expliqués.</p>
-    <button type="button" id="more" aria-expanded="false" aria-controls="vue-detail"><span class="lbl">Afficher le détail</span><span class="chev" aria-hidden="true"></span></button>
-  </div>
-  </div>
-
-  <div id="vue-detail" hidden>
-  <section>
-    <div class="label">Moteur physique</div>
-    <h2>De la détection à la réponse</h2>
-    <p class="intro">La physique tourne sous forme de systèmes ECS, exécutés à chaque frame dans cet ordre. Chaque étape réduit le travail de la suivante.</p>
-    <div class="pipeline" aria-label="Étapes de la physique">
-      <span class="stage">Intégration</span><span class="arrow" aria-hidden="true">→</span>
-      <span class="stage">Broad phase</span><span class="arrow" aria-hidden="true">→</span>
-      <span class="stage">Narrow phase</span><span class="arrow" aria-hidden="true">→</span>
-      <span class="stage">Résolution</span><span class="arrow" aria-hidden="true">→</span>
-      <span class="stage">Événements</span>
-    </div>
-    <div class="cards center">
-      <article class="card"><div class="k"><code>PhysicIntegrateSystem</code></div><h3>Intégration</h3><p>Forces, gravité, amortissement et résistance de l'air, puis vitesse angulaire via le tenseur d'inertie. Les corps presque immobiles s'endorment pour ne plus coûter de calcul.</p></article>
-      <article class="card"><div class="k"><code>BroadPhaseSystem</code></div><h3>Broad phase</h3><p>Une grille de hachage spatiale range chaque collider dans les cellules que couvre sa boîte englobante. Seuls les objets qui partagent une cellule forment une paire candidate.</p></article>
-      <article class="card"><div class="k"><code>NarrowPhaseSystem</code></div><h3>Narrow phase</h3><p>Tests exacts sphère–sphère, sphère–OBB et OBB–OBB par SAT sur 15 axes, avec construction des points de contact face–face et arête–arête.</p></article>
-      <article class="card"><div class="k"><code>PhysicSystem</code></div><h3>Résolution</h3><p>Impulsions accumulées sur la normale et en friction, restitution, plusieurs itérations de vitesse, puis correction des pénétrations restantes.</p></article>
-      <article class="card"><div class="k"><code>OnCollision</code> et <code>OnTrigger</code></div><h3>Événements</h3><p>Les collisions et les zones de déclenchement sont transmises aux scripts de gameplay sous forme de callbacks.</p></article>
-    </div>
-  </section>
-
-  <section>
-    <div class="label">Dans le code</div>
-    <h2>Trois points clés</h2>
-    <p class="intro">Extraits du dépôt, raccourcis pour la lecture.</p>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>Des paires sans doublon</h3>
-        <p>Deux objets peuvent se croiser dans plusieurs cellules de la grille. Chaque paire est donc rangée dans un ordre fixe (plus petit identifiant d'abord), triée, puis dédoublonnée avant le test de boîtes englobantes.</p>
-      </div>
-<pre><code><span class="k">for</span> (EntityId src : bucket.dynamic)
-    <span class="k">for</span> (EntityId tgt : bucket.all)
-    {
-        <span class="k">if</span> (src == tgt) <span class="k">continue</span>;
-        <span class="c">// (A,B) et (B,A) deviennent la même paire</span>
-        EntityId lo = (src &lt; tgt) ? src : tgt;
-        EntityId hi = (src &lt; tgt) ? tgt : src;
-        m_pairKeys.emplace_back(lo, hi);
-    }
-
-std::sort(m_pairKeys.begin(), m_pairKeys.end());
-m_pairKeys.erase(std::unique(m_pairKeys.begin(),
-                 m_pairKeys.end()), m_pairKeys.end());
-
-<span class="k">if</span> (shapeA.aabb.Overlaps(shapeB.aabb))
-    m_candidatePairs.push_back({ lo, hi });</code></pre>
-    </div>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>Une impulsion accumulée</h3>
-        <p>L'impulsion d'un point de contact est calculée avec la masse effective, qui tient compte de la rotation des deux corps. Le total accumulé ne peut jamais devenir négatif : un contact pousse, il ne tire pas.</p>
-      </div>
-<pre><code><span class="k">const float</span> effectiveMass =
-    rigidA.massInverse + rigidB.massInverse +
-    ComputeAngularMassTerm(rA, normal, rigidA.inertiaTensorWorldInverse) +
-    ComputeAngularMassTerm(rB, normal, rigidB.inertiaTensorWorldInverse);
-
-<span class="k">float</span> deltaImpulse = -(1.0f + restitution) * vn / effectiveMass;
-
-<span class="c">// Le cumul reste positif ou nul</span>
-<span class="k">const float</span> oldAccumulated = cached.accumulatedNormalImpulse;
-cached.accumulatedNormalImpulse = Max(0.0f, oldAccumulated + deltaImpulse);
-<span class="k">const float</span> applied = cached.accumulatedNormalImpulse - oldAccumulated;</code></pre>
-    </div>
-
-    <div class="code-block">
-      <div class="txt">
-        <h3>Mettre les corps en sommeil</h3>
-        <p>Un corps dont les vitesses restent sous un seuil pendant un certain temps s'endort et n'est plus simulé. Un choc avec un autre corps le réveille.</p>
-      </div>
-<pre><code><span class="k">float</span> linearSq  = LengthSq(motion.linearVelocity);
-<span class="k">float</span> angularSq = LengthSq(motion.angularVelocity);
-
-<span class="k">bool</span> lowMotion = linearSq &lt; kSleepLinearThreshold
-              &amp;&amp; angularSq &lt; kSleepAngularThreshold;
-
-<span class="k">if</span> (lowMotion)
-{
-    motion.sleepTimer += dt;
-    <span class="k">if</span> (motion.sleepTimer &gt;= kSleepTimeThreshold)
-        motion.Sleep();
-}
-<span class="k">else</span>
-    motion.sleepTimer = 0.0f;</code></pre>
-    </div>
-  </section>
-
-  <section>
-    <div class="label">Moteur</div>
-    <h2>Un moteur fait à trois</h2>
-    <p class="intro">En plus de la physique, le moteur comprend un rendu DirectX 12 (lumières, textures, polices, interface), un ECS par archétypes avec un ordonnanceur de systèmes, une couche réseau et un gestionnaire de scènes.</p>
-    <div class="keys">
-      <div><kbd>Z</kbd> <kbd>Q</kbd> <kbd>S</kbd> <kbd>D</kbd> se déplacer</div>
-      <div><kbd>Souris</kbd> regarder</div>
-      <div><kbd>1</kbd> → <kbd>3</kbd> choisir un objet</div>
-      <div><kbd>Clic gauche</kbd> lancer</div>
-      <div><kbd>Espace</kbd> sauter</div>
-      <div><kbd>R</kbd> passer la journée</div>
-    </div>
-  </section>
-  </div>
-
   <footer><a href="../index.html">← Retour au portfolio</a><span>© 2026 Baptiste Combeau</span></footer>
 </div>
 <script>
-(function(){
-  const btn=document.getElementById('more'), box=document.getElementById('vue-detail'), label=btn.querySelector('.lbl');
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function set(open,animate){
-    btn.setAttribute('aria-expanded',open);label.textContent=open?'Masquer le détail':'Afficher le détail';
-    try{history.replaceState(null,'',open?'#detail':location.pathname+location.search);}catch(e){}
-    if(open){box.hidden=false;if(animate&&!reduce&&box.animate)box.animate([{height:'0px',opacity:0},{height:box.scrollHeight+'px',opacity:1}],{duration:450,easing:'cubic-bezier(.2,.8,.2,1)'});}
-    else{
-      const done=()=>{box.hidden=true;if(btn.getBoundingClientRect().top<0)btn.scrollIntoView({block:'center'});};
-      if(animate&&!reduce&&box.animate){const a=box.animate([{height:box.offsetHeight+'px',opacity:1},{height:'0px',opacity:0}],{duration:300,easing:'ease-in'});a.onfinish=done;}else done();
-    }
-  }
-  btn.addEventListener('click',()=>set(btn.getAttribute('aria-expanded')!=='true',true));
-  if(location.hash==='#detail')set(true,false);
-})();
+document.querySelectorAll('.featlist .ts').forEach(function(b){b.addEventListener('click',function(){
+  var v=document.querySelectorAll('video')[+(b.dataset.video||0)];if(!v)return;
+  var go=function(){v.currentTime=+b.dataset.t;var p=v.play();if(p&&p.catch)p.catch(function(){});};
+  if(v.readyState>=1)go();else{v.addEventListener('loadedmetadata',go,{once:true});v.load();}
+  v.scrollIntoView({behavior:'smooth',block:'center'});
+});});
 </script>
 </body>
 </html>
